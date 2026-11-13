@@ -1,0 +1,113 @@
+<?php
+/**
+ * Fixed English texts (button labels, section titles, and so on).
+ * Content such as project titles is stored in the database, not here.
+ *
+ * Section titles: the word in [square brackets] is shown in a colored block.
+ */
+
+return [
+    'meta.locale'        => 'en_US',
+    'meta.site'          => 'Portfolio',
+    'lang.name'          => 'English',
+    'lang.switch'        => 'Choose language',
+
+    'skip'               => 'Skip to main content',
+    'nav.label'          => 'Main navigation',
+    'nav.about'          => 'About',
+    'nav.skills'         => 'Skills',
+    'nav.projects'       => 'Projects',
+    'nav.experience'     => 'Experience',
+    'nav.achievements'   => 'Certificates',
+    'nav.contact'        => 'Contact',
+    'nav.menu_open'      => 'Open menu',
+    'nav.menu_close'     => 'Close menu',
+    'nav.home'           => 'Go to home page',
+
+    'theme.toggle'       => 'Switch between light and dark theme',
+
+    // Hero
+    'hero.hello'         => "Hi! I'm",
+    'hero.see_projects'  => 'See projects',
+    'hero.download_cv'   => 'Download CV',
+    'hero.start_here'    => 'start here!',
+    'hero.photo_alt'     => 'Photo of :name',
+    'hero.photo_soon'    => 'photo coming soon',
+    'hero.code_hello'    => 'Hello!',
+    'hero.stats'         => 'Work at a glance',
+    'stat.projects'      => 'Projects',
+    'stat.certificates'  => 'Certificates',
+    'stat.competitions'  => 'Competitions',
+    'skills.band'        => 'Skill list',
+
+    // Section titles
+    'about.label'        => 'About',
+    'about.title'        => 'Nice to [meet you]',
+    'skills.label'       => 'Skills',
+    'skills.title'       => 'My everyday [toolkit]',
+    'skills.count'       => ':n skills',
+    'projects.label'     => 'Projects',
+    'projects.title'     => '[Featured] projects',
+    'projects.all'       => 'See all projects',
+    'projects.detail'    => 'View details',
+    'experience.label'   => 'Experience',
+    'experience.title'   => 'The journey [so far]',
+    'experience.edu'     => 'Education',
+    'experience.work'    => 'Experience',
+    'experience.now'     => 'now',
+    'experience.current' => 'Current',
+    'experience.photo'   => 'View photo',
+    'experience.photo_alt' => 'Photo of :title',
+    'type.kerja'         => 'Work',
+    'type.organisasi'    => 'Organization',
+    'type.pendidikan'    => 'Education',
+    'achievements.label' => 'Certificates',
+    'achievements.title' => 'Certificates & [awards]',
+    'achievements.more'  => 'Show more',
+    'achievements.proof' => 'View credential',
+    'achievements.view'  => 'View image',
+    'type.sertifikat'    => 'Certificate',
+    'type.lomba'         => 'Competition',
+    'type.penghargaan'   => 'Award',
+    'contact.label'      => 'Contact',
+    'contact.title'      => "Let's work [together!]",
+    'contact.body'       => 'Have a project, an internship offer, or just want to say hi? Send a message through the form, or email me directly.',
+    'contact.email'      => 'Send an email',
+    'contact.whatsapp'   => 'Chat on WhatsApp',
+
+    // Project pages
+    'page.projects'      => 'All projects',
+    'page.projects_desc' => 'Every project by :name, filterable by category.',
+    'projects.filter'    => 'Filter by category',
+    'projects.filter_all'=> 'All',
+    'projects.count'     => ':n projects',
+    'projects.empty'     => 'No projects in this category yet.',
+    'projects.page_title'=> 'All [projects]',
+    'projects.none'      => 'No projects to show yet. Stay tuned!',
+    'projects.back_home' => 'Back to home',
+    'project.back'       => 'All projects',
+    'project.demo'       => 'Open website',
+    'project.repo'       => 'View code',
+    'project.role'       => 'Role',
+    'project.year'       => 'Year',
+    'project.category'   => 'Category',
+    'project.tech'       => 'Tech',
+    'project.about'      => 'About the project',
+    'project.gallery'    => 'Gallery',
+    'project.cover_alt'  => 'Screenshot of :title',
+    'project.open_image' => 'Open full-size image',
+
+    // Footer & 404
+    'footer.thanks'      => 'Thanks for stopping by!',
+    'footer.back_top'    => 'Back to top',
+    'footer.made_with'   => 'built with PHP & MySQL',
+    'footer.social'      => 'Social media',
+    'page.home'          => 'Home',
+    'page.not_found'     => 'Page not found',
+    '404.title'          => 'Oops, this page does not exist.',
+    '404.body'           => 'The address may have a typo, or the page has moved.',
+    '404.back'           => 'Back to home',
+
+    // Temporary (replaced in Stage 6)
+    'wip.contact'        => 'The contact form arrives in Stage 6. Meanwhile, reach me by email or social media.',
+];
