@@ -1,0 +1,24 @@
+# =====================================================================
+# Folder unggahan: hanya untuk gambar dan PDF.
+# Skrip apa pun (PHP dan sejenisnya) DILARANG dijalankan dari sini,
+# supaya file berbahaya yang lolos unggah tetap tidak bisa dipakai.
+# =====================================================================
+
+Options -Indexes -ExecCGI
+
+# Tolak semua file selain gambar dan PDF
+<FilesMatch "\.(?i:php\d?|phtml|phar|pht|phps|pl|py|cgi|sh|asp|aspx|jsp|htaccess|htm|html|svg|js)$">
+    Require all denied
+</FilesMatch>
+
+# Matikan mesin PHP di folder ini (berlaku kalau PHP berjalan sebagai modul Apache)
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

@@ -1,3 +1,17 @@
+# --- Rahasia: pengaturan database TIDAK boleh ke GitHub ---
+config/database.php
+
+# --- File unggahan dari panel admin (foto, CV) tidak disimpan di Git ---
+uploads/**/*
+!uploads/.htaccess
+!uploads/*/
+!uploads/*/.gitkeep
+
+# --- Log dan file sementara ---
+*.log
+.DS_Store
+Thumbs.db
+
 # Cache Python dari skrip skill
 __pycache__/
 *.pyc
