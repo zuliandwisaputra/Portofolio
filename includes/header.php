@@ -9,6 +9,9 @@
  *   $pagePath        string alamat halaman tanpa kode bahasa, misalnya 'projects'
  *   $isHome          bool   true di beranda (tautan navbar jadi #bagian)
  *   $noIndex         bool   true supaya halaman tidak masuk mesin pencari (404)
+ *   $navActive       string kunci menu yang ditandai aktif (misalnya 'projects')
+ *   $ogImage         array  gambar pratinjau media sosial: ['url' => ..., 'w' => ..., 'h' => ...]
+ *   $preloadImage    array  gambar yang dimuat paling awal: ['src' => ..., 'srcset' => ..., 'sizes' => ...]
  */
 
 if (!defined('ROOT_PATH')) {
@@ -21,22 +24,33 @@ $pageTitle       = $pageTitle ?? '';
 $pagePath        = $pagePath ?? '';
 $isHome          = $isHome ?? false;
 $noIndex         = $noIndex ?? false;
+$navActive       = $navActive ?? '';
+$ogImage         = $ogImage ?? null;
+$preloadImage    = $preloadImage ?? null;
 $fullName        = trim((string) ($profile['full_name'] ?? '')) ?: 'Portofolio';
 $pageDescription = $pageDescription ?? tr($profile, 'meta_desc');
 
-$siteLabel = lang() === 'en' ? 'Portfolio' : 'Portofolio';
-$docTitle  = $pageTitle === '' ? $fullName . ' · ' . $siteLabel : $pageTitle . ' · ' . $fullName;
+$docTitle  = $pageTitle === '' ? $fullName . ' · ' . t('meta.site') : $pageTitle . ' · ' . $fullName;
 
-// Tautan navbar: di beranda cukup #bagian, di halaman lain menuju beranda#bagian
+// Bagian yang punya isi (kalau database bermasalah, misalnya di halaman 404, tampilkan semua)
+try {
+    $sections = home_sections();
+} catch (Throwable $e) {
+    $sections = array_fill_keys(['about', 'skills', 'projects', 'all_projects', 'experience', 'achievements', 'contact'], true);
+}
+
+// Tautan navbar: di beranda cukup #bagian, di halaman lain menuju beranda#bagian.
+// Bagian yang kosong tidak ditampilkan. "Project" menuju halaman daftar kalau belum ada yang unggulan.
 $home = $isHome ? '' : lang_url('');
-$navItems = [
-    ['about',        t('nav.about')],
-    ['skills',       t('nav.skills')],
-    ['projects',     t('nav.projects')],
-    ['experience',   t('nav.experience')],
-    ['achievements', t('nav.achievements')],
-    ['contact',      t('nav.contact')],
-];
+$navItems = [];
+foreach (['about' => 'nav.about', 'skills' => 'nav.skills', 'projects' => 'nav.projects',
+          'experience' => 'nav.experience', 'achievements' => 'nav.achievements', 'contact' => 'nav.contact'] as $id => $key) {
+    if (!empty($sections[$id])) {
+        $navItems[] = [$id, t($key), $home . '#' . $id];
+    } elseif ($id === 'projects' && !empty($sections['all_projects'])) {
+        $navItems[] = [$id, t($key), lang_url('projects')];
+    }
+}
 ?>
 <!doctype html>
 <html lang="<?= e(lang()) ?>">
@@ -64,12 +78,22 @@ $navItems = [
   <?php endif; ?>
   <meta property="og:url" content="<?= e(lang_url($pagePath)) ?>">
   <meta property="og:locale" content="<?= e(t('meta.locale')) ?>">
+  <meta property="og:site_name" content="<?= e($fullName . ' · ' . t('meta.site')) ?>">
+  <?php if ($ogImage): ?>
+  <meta property="og:image" content="<?= e($ogImage['url']) ?>">
+  <meta property="og:image:width" content="<?= e($ogImage['w']) ?>">
+  <meta property="og:image:height" content="<?= e($ogImage['h']) ?>">
+  <meta name="twitter:card" content="summary_large_image">
+  <?php endif; ?>
 
   <meta name="theme-color" content="#F2F5FF" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14111F" media="(prefers-color-scheme: dark)">
 
   <link rel="preload" href="/assets/fonts/public-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/lexend-mega-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <?php if ($preloadImage): ?>
+  <link rel="preload" as="image" href="<?= e($preloadImage['src']) ?>" imagesrcset="<?= e($preloadImage['srcset']) ?>" imagesizes="<?= e($preloadImage['sizes']) ?>" fetchpriority="high">
+  <?php endif; ?>
   <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
 
   <script>
@@ -99,8 +123,8 @@ $navItems = [
       </a>
 
       <nav class="links" id="nav-links" aria-label="<?= e(t('nav.label')) ?>">
-        <?php foreach ($navItems as [$id, $label]): ?>
-        <a href="<?= e($home) ?>#<?= e($id) ?>"><?= e($label) ?></a>
+        <?php foreach ($navItems as [$id, $label, $href]): ?>
+        <a href="<?= e($href) ?>"<?= $navActive === $id ? ' aria-current="true"' : '' ?>><?= e($label) ?></a>
         <?php endforeach; ?>
       </nav>
 

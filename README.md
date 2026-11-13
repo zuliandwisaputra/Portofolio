@@ -13,7 +13,7 @@ tanpa library animasi. Rincian kebutuhan ada di [PRD.md](PRD.md).
 | 2. Login admin | Login, logout, proteksi halaman, CSRF, pengunci gagal login, ganti password | Selesai |
 | 3. CRUD project & skill | Tambah/ubah/hapus project & skill, unggah + pengecilan gambar, galeri, pilihan teknologi | Selesai |
 | 4. CRUD lainnya & profil | Pengalaman & pendidikan (+ foto), sertifikat & lomba, menu Profil, unggah CV | Selesai |
-| 5. Halaman publik | | Belum |
+| 5. Halaman publik | Beranda lengkap, daftar project + saring kategori, detail project + galeri, SEO dasar, sitemap & robots | Selesai |
 | 6. Kontak | | Belum |
 | 7. Animasi | | Belum |
 | 8. Uji & rilis | | Belum |
@@ -61,7 +61,8 @@ Salin hasilnya (diawali `$2y$`), buka HeidiSQL → tabel `admins` → tempel di 
 ## Struktur folder
 
 ```
-index.php, projects.php, project.php, 404.php   halaman publik
+index.php, projects.php, project.php, 404.php   halaman publik (beranda, daftar project, detail project, 404)
+sitemap.php, robots.php                         /sitemap.xml dan /robots.txt untuk mesin pencari (dibuat otomatis)
 admin/       login.php, logout.php, index.php (dashboard), password.php,
              projects/, skills/, experiences/, achievements/ (index, create, edit, delete, form),
              profile.php (data diri, foto hero, CV, media sosial, pengaturan)
@@ -69,12 +70,44 @@ admin/       login.php, logout.php, index.php (dashboard), password.php,
 config/      app.php (pengaturan umum), database.example.php (contoh pengaturan database)
 includes/    functions.php, lang.php, header.php, footer.php, icons.php,
              auth.php (login & sesi), csrf.php (token formulir), admin_header.php, admin_footer.php,
-             upload.php (unggah & pengecilan gambar), form.php (bantuan formulir & tabel admin)
+             upload.php (unggah & pengecilan gambar), form.php (bantuan formulir & tabel admin),
+             project_card.php (kartu project di beranda & daftar project)
 lang/        id.php, en.php (teks tombol dan judul bagian)
 assets/      css/, js/, fonts/ (font disimpan sendiri), img/
 uploads/     file unggahan dari panel admin (PHP tidak bisa dijalankan di sini)
 database/    portofolio.sql (tabel + data awal)
 ```
+
+## Halaman publik
+
+| Alamat | Isi |
+|---|---|
+| `/id/` dan `/en/` | Beranda: hero, tentang, skill, project unggulan (maks. 6), pengalaman & pendidikan, sertifikat & lomba, kontak |
+| `/id/projects` | Semua project yang berstatus Tampil, bisa disaring per kategori (`?category=web`) |
+| `/id/project/nama-project` | Detail project: sampul, deskripsi, peran, tahun, teknologi, tautan demo & kode, galeri |
+| `/sitemap.xml`, `/robots.txt` | Untuk mesin pencari; Draf dan panel admin tidak ikut |
+
+- Hanya data berstatus **Tampil** yang muncul. Bagian yang belum punya isi (misalnya belum ada sertifikat) disembunyikan
+  beserta menunya, dan nomor bagian menyesuaikan.
+- Sertifikat: 6 pertama tampil, sisanya muncul lewat tombol *Tampilkan lebih banyak*.
+- Statistik hero dihitung otomatis: jumlah project, sertifikat, dan lomba (penghargaan tidak dihitung).
+- Tombol *Unduh CV* hanya muncul kalau CV sudah diunggah. Di versi Inggris, kalau CV Inggris kosong dipakai CV Indonesia.
+- Nomor WhatsApp tidak ditampilkan di website.
+
+### Gambar yang perlu kamu isi sendiri (lewat panel admin)
+
+Selama gambar belum diunggah, website menampilkan placeholder bergambar (bukan foto palsu):
+
+| Gambar | Menu admin | Disimpan di folder | Placeholder |
+|---|---|---|---|
+| Foto hero (foto diri) | Profil → Foto hero | `uploads/profile/` | kotak ungu berisi inisial "ZDS" |
+| Sampul project | Project → Ubah → Gambar sampul | `uploads/projects/` | gambar jendela browser warna-warni |
+| Galeri project (maks. 8) | Project → Ubah → Galeri | `uploads/projects/` | galeri tidak ditampilkan |
+| Foto pengalaman/pendidikan | Pengalaman → Ubah → Foto | `uploads/experiences/` | tidak ada foto |
+| Gambar sertifikat/lomba | Sertifikat → Ubah → Gambar | `uploads/achievements/` | kertas dengan ikon |
+| CV (PDF) | Profil → CV | `uploads/cv/` | tombol Unduh CV disembunyikan |
+
+Nama file dibuat acak oleh sistem, jadi nama file aslimu bebas.
 
 ## Unggah gambar
 

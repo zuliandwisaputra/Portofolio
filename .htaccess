@@ -44,6 +44,10 @@ ErrorDocument 403 /404.php
     RewriteCond %{REQUEST_URI} !^/robots\.txt$
     RewriteRule \.(md|sql|log|ini|lock|txt)$ - [F,L,NC]
 
+    # --- Peta situs & aturan robot untuk mesin pencari (dibuat oleh PHP) ---
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    RewriteRule ^robots\.txt$  robots.php  [L]
+
     # --- Halaman publik dua bahasa ---
     RewriteRule ^(id|en)/?$                       index.php?lang=$1          [L,QSA]
     RewriteRule ^(id|en)/projects/?$              projects.php?lang=$1       [L,QSA]

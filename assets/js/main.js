@@ -3,6 +3,7 @@
  * - Menu lipat di HP
  * - Tombol tampilkan/sembunyikan password
  * - Fokus ke ringkasan error setelah formulir gagal dikirim
+ * - Tombol "Tampilkan lebih banyak" (sertifikat)
  */
 
 /* Tombol tampilkan/sembunyikan password */
@@ -52,5 +53,23 @@
     if (btn.getAttribute('aria-expanded') === 'true' && !menu.contains(e.target) && !btn.contains(e.target)) {
       setOpen(false);
     }
+  });
+})();
+
+/* Tombol "Tampilkan lebih banyak": tanpa JavaScript semua kartu sudah tampil,
+   jadi tombol ini disembunyikan (atribut hidden) dan baru dimunculkan di sini. */
+(function () {
+  document.querySelectorAll('[data-more]').forEach(function (btn) {
+    var list = document.getElementById(btn.dataset.more);
+    if (!list) return;
+    btn.hidden = false;
+    btn.addEventListener('click', function () {
+      list.querySelectorAll('.is-extra').forEach(function (item) { item.classList.add('show'); });
+      btn.setAttribute('aria-expanded', 'true');
+      btn.hidden = true;
+      // Pindahkan fokus ke kartu pertama yang baru muncul supaya pengguna keyboard tidak tersesat
+      var first = list.querySelector('[data-first-extra]');
+      if (first) first.focus();
+    });
   });
 })();

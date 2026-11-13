@@ -246,4 +246,195 @@ function social_links(array $profile): array
     return $links;
 }
 
+/* ------------------------------------------------------------------
+ * Konten halaman publik
+ * ------------------------------------------------------------------ */
+
+/** Judul bagian: kata di dalam [kurung siku] jadi balok warna. Teks tetap diamankan dulu. */
+function hl_title(string $text, string $color = 'yellow'): string
+{
+    $color = in_array($color, ['yellow', 'pink', 'mint', 'blue', 'lav', 'orange'], true) ? $color : 'yellow';
+    return preg_replace('/\[(.+?)\]/', '<span class="hl" style="--c:var(--' . $color . ')">$1</span>', e($text)) ?? e($text);
+}
+
+/** Teks panjang → beberapa <p> (dipisah baris kosong); baris baru di dalamnya jadi <br>. */
+function paragraphs(?string $text): string
+{
+    $html = '';
+    foreach (preg_split('/\R\s*\R/', trim((string) $text)) ?: [] as $part) {
+        $part = trim($part);
+        if ($part !== '') {
+            $html .= '<p>' . nl2br(e($part), false) . '</p>';
+        }
+    }
+    return $html;
+}
+
+/**
+ * Bagian beranda yang punya isi. Bagian kosong tidak ditampilkan
+ * (termasuk tautannya di navbar), sesuai PRD.
+ */
+function home_sections(): array
+{
+    static $sections = null;
+    if ($sections !== null) {
+        return $sections;
+    }
+    $stmt = db()->prepare(
+        "SELECT (SELECT COUNT(*) FROM skills       WHERE status = 'published')                    AS skills,
+                (SELECT COUNT(*) FROM projects     WHERE status = 'published' AND is_featured = 1) AS featured,
+                (SELECT COUNT(*) FROM projects     WHERE status = 'published')                    AS projects,
+                (SELECT COUNT(*) FROM experiences  WHERE status = 'published')                    AS experience,
+                (SELECT COUNT(*) FROM achievements WHERE status = 'published')                    AS achievements"
+    );
+    $stmt->execute();
+    $c = $stmt->fetch();
+    $sections = [
+        'about'        => true,
+        'skills'       => (int) $c['skills'] > 0,
+        'projects'     => (int) $c['featured'] > 0,
+        'all_projects' => (int) $c['projects'] > 0,
+        'experience'   => (int) $c['experience'] > 0,
+        'achievements' => (int) $c['achievements'] > 0,
+        'contact'      => true,
+    ];
+    return $sections;
+}
+
+/** Daftar peran sesuai bahasa (bahasa Inggris kosong → pakai Indonesia). */
+function role_list(array $profile): array
+{
+    $text = tr($profile, 'roles');
+    return array_values(array_filter(array_map('trim', preg_split('/\R/', $text) ?: []), fn ($r) => $r !== ''));
+}
+
+/** Alamat CV sesuai bahasa aktif; CV Inggris kosong → CV Indonesia; tidak ada → ''. */
+function cv_url(array $profile): string
+{
+    foreach ([lang() === 'en' ? 'cv_eng' : 'cv_ind', 'cv_ind'] as $column) {
+        $file = (string) ($profile[$column] ?? '');
+        if (preg_match('/^[a-f0-9]{32}\.pdf$/', $file) && is_file(ROOT_PATH . '/uploads/cv/' . $file)) {
+            return '/uploads/cv/' . $file;
+        }
+    }
+    return '';
+}
+
+/** Ikon logo untuk nama teknologi yang dikenal (selain itu tanpa ikon). */
+function tech_icon(string $name): ?string
+{
+    $map = [
+        'html' => 'html', 'html5' => 'html', 'css' => 'css', 'css3' => 'css',
+        'javascript' => 'js', 'js' => 'js', 'php' => 'php', 'mysql' => 'mysql', 'mariadb' => 'db',
+        'sql' => 'db', 'git' => 'git', 'github' => 'github', 'figma' => 'figma', 'laravel' => 'laravel',
+        'python' => 'python', 'react' => 'react', 'bootstrap' => 'bootstrap', 'tailwind' => 'tailwind',
+        'tailwind css' => 'tailwind', 'node.js' => 'nodejs', 'nodejs' => 'nodejs', 'vs code' => 'vscode', 'vscode' => 'vscode',
+    ];
+    return $map[mb_strtolower(trim($name))] ?? null;
+}
+
+/** Ikon untuk kategori skill. */
+function skill_category_icon(string $category): string
+{
+    return ['frontend' => 'code', 'backend' => 'term', 'database' => 'db', 'tools' => 'tool'][$category] ?? 'tools';
+}
+
+/**
+ * Project yang sudah terbit, lengkap dengan daftar nama teknologinya (kunci 'skills').
+ * $featured = hanya unggulan; $category = saring kategori; $limit = batas jumlah.
+ */
+function published_projects(bool $featured = false, ?string $category = null, ?int $limit = null): array
+{
+    $sql = "SELECT id, slug, title_ind, title_eng, summary_ind, summary_eng, category, year, cover_image
+              FROM projects WHERE status = 'published'";
+    $params = [];
+    if ($featured) {
+        $sql .= ' AND is_featured = 1';
+    }
+    if ($category !== null) {
+        $sql .= ' AND category = ?';
+        $params[] = $category;
+    }
+    $sql .= ' ORDER BY sort_order, id';
+    if ($limit !== null) {
+        $sql .= ' LIMIT ' . max(1, $limit);
+    }
+    $stmt = db()->prepare($sql);
+    $stmt->execute($params);
+    $projects = $stmt->fetchAll();
+    if (!$projects) {
+        return [];
+    }
+
+    $ids = array_column($projects, 'id');
+    $stmt = db()->prepare(
+        "SELECT ps.project_id, s.name
+           FROM project_skill ps JOIN skills s ON s.id = ps.skill_id
+          WHERE s.status = 'published' AND ps.project_id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')
+          ORDER BY s.sort_order, s.name'
+    );
+    $stmt->execute($ids);
+    $skills = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $skills[(int) $row['project_id']][] = $row['name'];
+    }
+    foreach ($projects as &$project) {
+        $project['skills'] = $skills[(int) $project['id']] ?? [];
+    }
+    return $projects;
+}
+
+/**
+ * Data gambar unggahan untuk srcset: versi kecil + besar, lebar & tinggi versi kecil.
+ * Hasil: ['src' => ..., 'srcset' => ..., 'w' => ..., 'h' => ...] atau null kalau file tidak ada.
+ * Butuh includes/upload.php.
+ */
+function img_set(string $folder, ?string $file): ?array
+{
+    if (!is_upload_name($file)) {
+        return null;
+    }
+    [$w, $h] = image_size($folder, $file, true);
+    [$bigW]  = image_size($folder, $file, false);
+    if (!$w) {
+        return null;
+    }
+    $src    = upload_url($folder, $file, true);
+    $srcset = $src . ' ' . $w . 'w';
+    if ($bigW > $w) {
+        $srcset .= ', ' . upload_url($folder, $file, false) . ' ' . $bigW . 'w';
+    }
+    return ['src' => $src, 'srcset' => $srcset, 'w' => $w, 'h' => $h];
+}
+
+/**
+ * <img> responsif untuk gambar unggahan: versi kecil + besar (srcset), lebar & tinggi tetap
+ * (mencegah tata letak bergeser), dan dimuat belakangan kecuali $priority.
+ * Butuh includes/upload.php.
+ */
+function responsive_img(string $folder, ?string $file, string $alt, string $sizes, string $class = '', bool $priority = false): string
+{
+    $img = img_set($folder, $file);
+    if (!$img) {
+        return '';
+    }
+    return '<img src="' . e($img['src']) . '" srcset="' . e($img['srcset']) . '" sizes="' . e($sizes) . '"'
+        . ' width="' . $img['w'] . '" height="' . $img['h'] . '" alt="' . e($alt) . '"'
+        . ($class !== '' ? ' class="' . e($class) . '"' : '')
+        . ($priority ? ' fetchpriority="high"' : ' loading="lazy"') . ' decoding="async">';
+}
+
+/** Gambar pratinjau media sosial (og:image) dari gambar unggahan versi besar, alamat lengkap. */
+function og_image(string $folder, ?string $file): ?array
+{
+    [$w, $h] = image_size($folder, $file, false);
+    return $w ? ['url' => base_url(ltrim(upload_url($folder, $file), '/')), 'w' => $w, 'h' => $h] : null;
+}
+
+/** Warna kartu bergiliran. */
+function cycle_color(int $i, array $colors = ['yellow', 'pink', 'mint', 'lav', 'blue', 'orange']): string
+{
+    return $colors[$i % count($colors)];
+}
+
 require ROOT_PATH . '/includes/lang.php';
