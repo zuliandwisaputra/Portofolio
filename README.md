@@ -11,7 +11,7 @@ tanpa library animasi. Rincian kebutuhan ada di [PRD.md](PRD.md).
 |---|---|---|
 | 1. Fondasi | Struktur folder, database, koneksi PDO, dua bahasa, dua tema, header & footer | Selesai |
 | 2. Login admin | Login, logout, proteksi halaman, CSRF, pengunci gagal login, ganti password | Selesai |
-| 3. CRUD project & skill | | Belum |
+| 3. CRUD project & skill | Tambah/ubah/hapus project & skill, unggah + pengecilan gambar, galeri, pilihan teknologi | Selesai |
 | 4. CRUD lainnya & profil | | Belum |
 | 5. Halaman publik | | Belum |
 | 6. Kontak | | Belum |
@@ -62,16 +62,26 @@ Salin hasilnya (diawali `$2y$`), buka HeidiSQL → tabel `admins` → tempel di 
 
 ```
 index.php, projects.php, project.php, 404.php   halaman publik
-admin/       login.php, logout.php, index.php (dashboard), password.php
+admin/       login.php, logout.php, index.php (dashboard), password.php,
+             projects/ dan skills/ (index, create, edit, delete, form)
 .htaccess                                       alamat rapi (/id/, /en/) dan aturan keamanan
 config/      app.php (pengaturan umum), database.example.php (contoh pengaturan database)
 includes/    functions.php, lang.php, header.php, footer.php, icons.php,
-             auth.php (login & sesi), csrf.php (token formulir), admin_header.php, admin_footer.php
+             auth.php (login & sesi), csrf.php (token formulir), admin_header.php, admin_footer.php,
+             upload.php (unggah & pengecilan gambar), form.php (bantuan formulir & tabel admin)
 lang/        id.php, en.php (teks tombol dan judul bagian)
 assets/      css/, js/, fonts/ (font disimpan sendiri), img/
 uploads/     file unggahan dari panel admin (PHP tidak bisa dijalankan di sini)
 database/    portofolio.sql (tabel + data awal)
 ```
+
+## Unggah gambar
+
+- Format JPG, PNG, atau WebP, maksimal 2 MB per file. Isi file diperiksa, bukan hanya namanya.
+- Gambar disimpan ulang sebagai WebP dengan nama acak: versi besar (lebar maks. 1600 px) dan versi kecil 600 px.
+- Galeri project maksimal 8 gambar; teks alt dibuat otomatis dari judul dan bisa diubah.
+- Batas unggah PHP dinaikkan lewat `.htaccess` (Laragon/Apache) dan `.user.ini` (hosting PHP-FPM).
+- Kalau muncul pesan "folder tidak bisa ditulis" di hosting, beri izin tulis (755) ke folder `uploads/`.
 
 ## Catatan keamanan
 

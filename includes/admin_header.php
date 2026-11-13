@@ -22,8 +22,8 @@ $flash      = take_flash();
 // [kunci, label, alamat, ikon, tahap selesai]  (alamat null = belum dibuat)
 $menu = [
     ['dashboard',    'Dashboard',                '/admin/',                   'dashboard', null],
-    ['projects',     'Project',                  null,                        'folder',    'Tahap 3'],
-    ['skills',       'Skill',                    null,                        'tools',     'Tahap 3'],
+    ['projects',     'Project',                  '/admin/projects/',          'folder',    null],
+    ['skills',       'Skill',                    '/admin/skills/',            'tools',     null],
     ['experiences',  'Pengalaman & pendidikan',  null,                        'school',    'Tahap 4'],
     ['achievements', 'Sertifikat & lomba',       null,                        'award',     'Tahap 4'],
     ['messages',     'Pesan',                    null,                        'inbox',     'Tahap 6'],

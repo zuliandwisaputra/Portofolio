@@ -13,6 +13,14 @@ AddDefaultCharset UTF-8
 ErrorDocument 404 /404.php
 ErrorDocument 403 /404.php
 
+# Batas unggah PHP (kode tetap membatasi: gambar 2 MB, CV 5 MB).
+# Bagian ini untuk Laragon/Apache; hosting dengan PHP-FPM memakai file .user.ini.
+<IfModule php_module>
+    php_value upload_max_filesize 6M
+    php_value post_max_size 40M
+    php_value max_file_uploads 20
+</IfModule>
+
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "SAMEORIGIN"

@@ -24,8 +24,8 @@ $count = $stmt->fetch();
 // [judul, angka, keterangan, warna, ikon, alamat kelola, tahap]
 $cards = [
     ['Project', $count['projects_published'] + $count['projects_draft'],
-        $count['projects_published'] . ' terbit · ' . $count['projects_draft'] . ' draf', 'yellow', 'folder', null, 'Tahap 3'],
-    ['Skill', $count['skills'], 'dikelompokkan per kategori', 'mint', 'tools', null, 'Tahap 3'],
+        $count['projects_published'] . ' terbit · ' . $count['projects_draft'] . ' draf', 'yellow', 'folder', '/admin/projects/', null],
+    ['Skill', $count['skills'], 'dikelompokkan per kategori', 'mint', 'tools', '/admin/skills/', null],
     ['Pengalaman & pendidikan', $count['experiences'], 'kerja, organisasi, pendidikan', 'lav', 'school', null, 'Tahap 4'],
     ['Sertifikat & lomba', $count['achievements'], 'sertifikat, lomba, penghargaan', 'orange', 'award', null, 'Tahap 4'],
     ['Pesan belum dibaca', $count['messages_unread'], 'dari ' . $count['messages_total'] . ' pesan masuk', 'pink', 'inbox', null, 'Tahap 6'],
