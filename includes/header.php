@@ -26,6 +26,8 @@ $isHome          = $isHome ?? false;
 $noIndex         = $noIndex ?? false;
 $navActive       = $navActive ?? '';
 $ogImage         = $ogImage ?? null;
+// Animasi masuk hanya di beranda, dan bisa dimatikan dari menu Profil
+$introEnabled    = $isHome && !empty($profile['intro_animation_enabled']);
 $preloadImage    = $preloadImage ?? null;
 $fullName        = trim((string) ($profile['full_name'] ?? '')) ?: 'Portofolio';
 $pageDescription = $pageDescription ?? tr($profile, 'meta_desc');
@@ -107,11 +109,26 @@ foreach (['about' => 'nav.about', 'skills' => 'nav.skills', 'projects' => 'nav.p
         theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
       root.setAttribute('data-theme', theme);
+<?php if ($introEnabled): ?>
+      /* Animasi masuk beranda: sekali per kunjungan (sessionStorage), tidak diputar kalau
+         pengunjung memilih "kurangi gerakan" atau langsung menuju bagian tertentu (#kontak, dll). */
+      try {
+        if (!location.hash && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            && !sessionStorage.getItem('intro-done')) {
+          sessionStorage.setItem('intro-done', '1');
+          root.className += ' intro';
+          root.setAttribute('data-intro-t', String(Math.round(performance.now())));
+        }
+      } catch (e) {}
+<?php endif; ?>
     })();
   </script>
 </head>
 <body>
 <?php require ROOT_PATH . '/includes/icons.php'; ?>
+<?php if ($introEnabled): ?>
+<div class="curtain" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<?php endif; ?>
 <a class="skip-link" href="#main"><?= e(t('skip')) ?></a>
 
 <header class="nav" id="top">

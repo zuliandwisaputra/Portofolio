@@ -82,7 +82,7 @@ body {
   font: 400 16px/1.65 var(--body);
   -webkit-font-smoothing: antialiased;
 }
-main { flex: 1 0 auto; }
+main { flex: 1 0 auto; overflow-x: clip; }
 main:focus { outline: none; }
 h1, h2, h3, h4, p, ul, ol { margin: 0; }
 h1, h2, h3, h4 { text-wrap: balance; }
@@ -172,6 +172,7 @@ svg.i { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor;
 .foot-up:hover { transform: translateY(-3px); }
 .foot-up svg.i { width: 16px; height: 16px; }
 .foot-big { font: 800 clamp(3rem, 1rem + 12vw, 10.5rem)/.86 var(--display); letter-spacing: -.11em; margin: 30px 0 0 -.03em; white-space: nowrap; overflow: hidden; padding-block: .06em .02em; }
+.foot-big .ch { display: inline-block; }
 .foot-big .dot { color: var(--foot-acc); }
 .foot-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-block: 20px 26px; margin-top: 20px; border-top: 2px solid var(--bg); font-size: 14px; }
 .foot-social { display: flex; gap: 8px; list-style: none; padding: 0; }
@@ -190,9 +191,12 @@ svg.i { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor;
 .hero-hello { font: italic 700 20px/1.2 var(--body); color: var(--muted); margin-bottom: -8px; }
 .hero-name { font: 800 clamp(2.4rem, 1.5rem + 4.2vw, 4.9rem)/1.04 var(--display); letter-spacing: -.085em; overflow-wrap: anywhere; }
 .hero-name .l1 { display: block; padding-bottom: .1em; margin-bottom: -.1em; }
+.hero-name .w { white-space: nowrap; }
+.hero-name .ch { display: inline-block; }
 .hero-name .blk { display: inline-block; margin-top: .14em; padding: .02em .22em .1em .16em; background: var(--yellow); color: var(--on); border: 3px solid var(--line); border-radius: 14px; box-shadow: 6px 6px 0 var(--line); transform: rotate(-2deg); }
 .hero-role { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font: 700 18px/1.3 var(--body); min-height: 50px; }
-.hero-role .tbox { display: inline-flex; align-items: center; gap: 9px; background: var(--mint); color: var(--on); padding: 9px 14px; border-radius: 12px; border: var(--bw) solid var(--line); box-shadow: 3px 3px 0 var(--line); }
+.hero-role .tbox { max-width: 100%; display: inline-flex; align-items: center; gap: 9px; background: var(--mint); color: var(--on); padding: 9px 14px; border-radius: 12px; border: var(--bw) solid var(--line); box-shadow: 3px 3px 0 var(--line); }
+.hero-role .typed { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hero-role .cur { display: inline-block; width: .55em; height: 1.1em; margin-left: 4px; background: #111111; vertical-align: -0.15em; }
 .hero-tagline { font-size: 18px; color: var(--muted); max-width: 44ch; font-weight: 500; }
 .hero-cta { position: relative; display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 6px; }
@@ -488,8 +492,75 @@ textarea.c-input { min-height: 130px; resize: vertical; }
   .pd-body, .pd-gallery { margin-top: 40px; }
 }
 
+/* =====================================================================
+   ANIMASI (Tahap 7)
+   - Hanya posisi (translate) dan transparansi (opacity), jadi tata letak tidak bergeser.
+   - Elemen hanya disembunyikan kalau JavaScript aktif: kelas .intro dipasang skrip kecil
+     di <head>, kelas .rv dipasang assets/js/anim.js. Tanpa JavaScript semua isi tetap tampil.
+   ===================================================================== */
+@keyframes a-rise    { from { opacity: 0; translate: 0 22px; } }
+@keyframes a-drop    { from { opacity: 0; translate: 0 -18px; } }
+@keyframes a-left    { from { opacity: 0; translate: -40px 0; } }
+@keyframes a-right   { from { opacity: 0; translate: 56px 0; } }
+@keyframes a-pop     { from { opacity: 0; translate: 0 12px; } }
+@keyframes a-fade    { from { opacity: 0; } }
+@keyframes a-nav     { from { opacity: 0; translate: 0 -28px; } }
+@keyframes a-mask    { from { translate: 0 108%; } }
+@keyframes a-curtain { to { translate: 0 -101%; } }
+
+/* Animasi masuk beranda: tirai lima warna tersingkap, lalu isi hero muncul bergantian.
+   Urutan terakhir selesai sekitar 1,4 detik (batas PRD 1,5 detik). */
+.curtain { display: none; }
+.intro .curtain { position: fixed; inset: 0; z-index: 300; display: grid; grid-template-columns: repeat(5, 1fr); pointer-events: none; }
+.curtain i { display: block; border-right: 3px solid #111111; animation: a-curtain .5s cubic-bezier(.3, .6, .2, 1) both; animation-delay: calc(var(--k) * 45ms); }
+.curtain i:last-child { border-right: 0; }
+.curtain i:nth-child(1) { background: var(--yellow); --k: 0; }
+.curtain i:nth-child(2) { background: var(--pink); --k: 1; }
+.curtain i:nth-child(3) { background: var(--mint); --k: 2; }
+.curtain i:nth-child(4) { background: var(--blue); --k: 3; }
+.curtain i:nth-child(5) { background: var(--lav); --k: 4; }
+
+.intro .nav           { animation: a-nav   .5s  var(--ease)  60ms both; }
+.intro .badge-status  { animation: a-drop  .5s  var(--ease) 140ms both; }
+.intro .hero-hello    { animation: a-rise  .5s  var(--ease) 200ms both; }
+.intro .hero-name .l1 { overflow: hidden; }
+.intro .hero-name .ch { animation: a-mask  .5s  var(--ease) both; animation-delay: calc(260ms + var(--k) * 28ms); }
+.intro .hero-name .blk { animation: a-left .55s var(--ease) 480ms both; }
+.intro .hero-role     { animation: a-rise  .5s  var(--ease) 560ms both; }
+.intro .hero-tagline  { animation: a-rise  .5s  var(--ease) 620ms both; }
+.intro .hero-cta      { animation: a-rise  .5s  var(--ease) 680ms both; }
+.intro .hero-meta     { animation: a-rise  .5s  var(--ease) 740ms both; }
+.intro .window-back   { animation: a-right .6s  var(--ease) 200ms both; }
+.intro .window        { animation: a-right .6s  var(--ease) 280ms both; }
+.intro .spark         { animation: a-pop   .45s var(--ease) 760ms both; }
+.intro .code-chip     { animation: a-drop  .5s  var(--ease) 820ms both; }
+.intro .deco          { animation: a-fade  .5s  var(--ease) 840ms both; }
+.intro .tape          { animation: a-left  .55s var(--ease) 860ms both; }
+.intro .float         { animation: a-drop  .5s  var(--ease) 880ms both; }
+.intro .doodle        { animation: a-fade  .5s  var(--ease) 900ms both; }
+
+/* Animasi scroll: tiap elemen sekali saat masuk layar. --i = urutan dalam satu gelombang. */
+.rv { opacity: 0; }
+.rv.in { opacity: 1; animation: a-rise .6s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); }
+.rv.in.rv-l { animation-name: a-left; }
+.rv.in.rv-r { animation-name: a-right; }
+.head.rv.in .num { animation: a-drop .45s var(--ease) 60ms both; }
+.head.rv.in .hl  { animation: a-left .5s var(--ease) 240ms both; }
+.foot-big.rv { opacity: 1; }
+.foot-big.rv .ch { translate: 0 112%; }
+.foot-big.rv.in { animation: none; }
+.foot-big.rv.in .ch { translate: none; animation: a-mask .55s var(--ease) both; animation-delay: calc(var(--k) * 60ms); }
+
+@media print {
+  .rv, .rv .ch { opacity: 1 !important; translate: none !important; animation: none !important; }
+  .curtain { display: none !important; }
+}
+
 /* ---------- Kurangi gerakan ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv, .rv .ch { opacity: 1 !important; translate: none !important; }
+  .curtain { display: none !important; }
+  .hero-role .cur { display: none; }
 }

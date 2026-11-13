@@ -15,7 +15,7 @@ tanpa library animasi. Rincian kebutuhan ada di [PRD.md](PRD.md).
 | 4. CRUD lainnya & profil | Pengalaman & pendidikan (+ foto), sertifikat & lomba, menu Profil, unggah CV | Selesai |
 | 5. Halaman publik | Beranda lengkap, daftar project + saring kategori, detail project + galeri, SEO dasar, sitemap & robots | Selesai |
 | 6. Kontak | Form kontak (CSRF, isian jebakan bot, batas 3 pesan/10 menit), menu Pesan di admin | Selesai |
-| 7. Animasi | | Belum |
+| 7. Animasi | Tirai lima warna + animasi masuk hero, angka menghitung naik, efek ketik peran, animasi scroll, navbar menandai bagian aktif | Selesai |
 | 8. Uji & rilis | | Belum |
 
 ## Cara menjalankan di Laragon (Windows)
@@ -76,7 +76,7 @@ includes/    functions.php, lang.php, header.php, footer.php, icons.php,
              project_card.php (kartu project di beranda & daftar project),
              contact.php (aturan form kontak & pembatas pesan)
 lang/        id.php, en.php (teks tombol dan judul bagian)
-assets/      css/, js/, fonts/ (font disimpan sendiri), img/
+assets/      css/, js/ (main.js, theme.js, anim.js = animasi), fonts/ (font disimpan sendiri), img/
 uploads/     file unggahan dari panel admin (PHP tidak bisa dijalankan di sini)
 database/    portofolio.sql (tabel + data awal)
 ```
@@ -96,6 +96,23 @@ database/    portofolio.sql (tabel + data awal)
 - Statistik hero dihitung otomatis: jumlah project, sertifikat, dan lomba (penghargaan tidak dihitung).
 - Tombol *Unduh CV* hanya muncul kalau CV sudah diunggah. Di versi Inggris, kalau CV Inggris kosong dipakai CV Indonesia.
 - Tombol WhatsApp hanya muncul kalau nomor diisi di menu Profil. Kosongkan supaya tidak tampil (saat ini kosong).
+
+## Animasi
+
+| Animasi | Kapan | Keterangan |
+|---|---|---|
+| Animasi masuk | Beranda, sekali per kunjungan | Tirai lima warna tersingkap, lalu badge, nama (huruf demi huruf), peran, tombol, foto, dan angka muncul bergantian. Selesai dalam ±1,4 detik. Angka ringkas menghitung naik dari 0. |
+| Efek ketik | Beranda | Peran di hero berganti-ganti seperti diketik. Daftarnya dari menu Profil → Daftar peran. |
+| Animasi scroll | Semua halaman publik | Tiap bagian muncul saat digulir ke layar: judul lebih dulu, lalu kartu berurutan. Tiap elemen hanya sekali. |
+| Navbar aktif | Beranda | Menu di navbar menandai bagian yang sedang dibaca. |
+| Efek hover | Semua halaman | Kartu dan tombol sedikit terangkat saat disentuh kursor. |
+
+- Yang dianimasikan hanya posisi dan transparansi, jadi tata letak tidak bergeser. Durasi tiap gerakan 0,45–0,6 detik.
+- **Kurangi gerakan** (pengaturan perangkat) aktif: tidak ada animasi, semua isi langsung tampil, hanya peran pertama.
+- **JavaScript mati**: tidak ada yang disembunyikan, semua isi tetap terlihat.
+- **Mematikan animasi masuk**: menu Profil → hilangkan centang *Animasi masuk aktif*. Animasi scroll dan efek ketik tetap berjalan.
+- Ingin melihat animasi masuk lagi saat mengetes? Tutup tab lalu buka beranda di tab baru (atau jendela penyamaran),
+  karena animasi ini hanya diputar sekali per kunjungan.
 
 ## Form kontak & menu Pesan
 

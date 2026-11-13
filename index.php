@@ -92,6 +92,26 @@ $secLabel = function (string $key) use (&$secNum): string {
     return sprintf('%02d / %s', ++$secNum, mb_strtoupper(t($key)));
 };
 
+/**
+ * Huruf nama dibungkus satu per satu untuk animasi masuk (muncul bergantian).
+ * Tiap kata dibungkus .w supaya tidak terpotong di tengah kata. Pembaca layar membaca
+ * nama utuh dari <span class="sr-only">, bagian huruf ini disembunyikan (aria-hidden).
+ */
+function name_letters(string $text): string
+{
+    $html = [];
+    $k = 0;
+    foreach (preg_split('/\s+/u', trim($text)) ?: [] as $word) {
+        $letters = '';
+        foreach (mb_str_split($word) as $ch) {
+            $letters .= '<span class="ch" style="--k:' . min($k++, 20) . '">' . e($ch) . '</span>';
+        }
+        $html[] = '<span class="w">' . $letters . '</span>';
+        $k++;
+    }
+    return implode(' ', $html);
+}
+
 // Satu entri pengalaman/pendidikan
 function journey_item(array $row, int $i): string
 {
@@ -146,7 +166,7 @@ require ROOT_PATH . '/includes/header.php';
 
 <!-- ===================== HERO ===================== -->
 <div class="wrap">
-  <section class="hero" aria-labelledby="hero-name">
+  <section class="hero" id="hero" aria-labelledby="hero-name">
     <svg class="deco d1" viewBox="0 0 70 22" aria-hidden="true"><path d="M3 11 Q 11 2, 19 11 T 35 11 T 51 11 T 67 11"/></svg>
     <svg class="deco d2" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-sparkle"/></svg>
     <svg class="deco d3" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>
@@ -156,7 +176,7 @@ require ROOT_PATH . '/includes/header.php';
       <p class="sticker badge-status bg-mint" style="--r:-2deg"><span class="dot" aria-hidden="true"></span><?= e($statusText) ?></p>
       <?php endif; ?>
       <p class="hero-hello"><?= e(t('hero.hello')) ?></p>
-      <h1 class="hero-name" id="hero-name"><?php if ($nameFirst !== ''): ?><span class="l1"><?= e($nameFirst) ?></span> <?php endif; ?><span class="blk"><?= e($nameLast) ?></span></h1>
+      <h1 class="hero-name" id="hero-name"><span class="sr-only"><?= e($fullName) ?></span><span aria-hidden="true"><?php if ($nameFirst !== ''): ?><span class="l1"><?= name_letters($nameFirst) ?></span> <?php endif; ?><span class="blk"><?= e($nameLast) ?></span></span></h1>
 
       <?php if ($roles): ?>
       <p class="hero-role" data-roles="<?= e(json_encode($roles, JSON_UNESCAPED_UNICODE)) ?>">

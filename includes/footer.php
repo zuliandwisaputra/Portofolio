@@ -22,7 +22,7 @@ $socials  = social_links($profile);
       <span class="sticker bg-pink" style="--r:-3deg"><?= e(t('footer.thanks')) ?></span>
       <a class="foot-up" href="#top"><?= icon('arrow-up') ?><?= e(t('footer.back_top')) ?></a>
     </div>
-    <p class="foot-big" aria-hidden="true"><?= e($firstName) ?><span class="dot">.</span></p>
+    <p class="foot-big" aria-hidden="true"><?php foreach (mb_str_split($firstName) as $k => $ch): ?><span class="ch" style="--k:<?= $k ?>"><?= e($ch) ?></span><?php endforeach; ?><span class="ch dot" style="--k:<?= mb_strlen($firstName) ?>">.</span></p>
     <div class="foot-bottom">
       <span>© <?= date('Y') ?> <?= e($fullName) ?> · <?= e(t('footer.made_with')) ?></span>
       <?php if ($socials): ?>
@@ -37,6 +37,7 @@ $socials  = social_links($profile);
 </footer>
 
 <script src="<?= e(asset('js/theme.js')) ?>" defer></script>
+<script src="<?= e(asset('js/anim.js')) ?>" defer></script>
 <script src="<?= e(asset('js/main.js')) ?>" defer></script>
 </body>
 </html>
