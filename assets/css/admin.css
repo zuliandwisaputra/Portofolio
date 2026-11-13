@@ -1,0 +1,132 @@
+/* =====================================================================
+   Panel admin — memakai variabel warna & komponen dari style.css,
+   ditambah tata letak menu samping, kartu ringkasan, formulir, dan pesan.
+   Dirancang untuk desktop, tetap bisa dipakai di HP.
+   ===================================================================== */
+
+body.admin { display: block; }
+.admin h1, .admin h2 { font-family: var(--body); letter-spacing: -.01em; }
+.muted { color: var(--muted); }
+.req { color: #D6336C; }
+:root[data-theme="dark"] .req { color: var(--pink); }
+
+/* ---------- Tata letak ---------- */
+.admin-shell { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: 100vh; }
+.side {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 18px; padding: 18px 14px;
+  background: var(--surface); border-right: var(--bw) solid var(--line);
+}
+.side-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-inline: 6px; }
+.side-nav { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; flex: 1; }
+.side-nav ul { list-style: none; padding: 0; display: grid; gap: 4px; }
+.side-nav a, .side-nav .soon, .side-logout {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 10px 12px; border-radius: 12px; border: 2px solid transparent;
+  font: 700 15px/1.2 var(--body); color: var(--ink); text-decoration: none; background: none; cursor: pointer; text-align: left;
+}
+.side-nav a:hover, .side-logout:hover { border-color: var(--line); }
+.side-nav a[aria-current="page"] { background: var(--pink); color: var(--on); border-color: var(--line); box-shadow: 3px 3px 0 var(--line); }
+.side-nav .soon { color: var(--muted); cursor: default; font-weight: 600; }
+.side-nav .soon em { margin-left: auto; font: 700 11px/1 var(--mono); font-style: normal; border: 1.5px dashed currentColor; border-radius: 6px; padding: 3px 5px; white-space: nowrap; }
+.side-bottom { display: grid; gap: 4px; padding-top: 14px; border-top: 2px dashed var(--line); }
+.side-logout { color: #C2255C; }
+:root[data-theme="dark"] .side-logout { color: var(--pink); }
+
+.admin-main { min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 18px;
+  padding: 22px 36px; border-bottom: var(--bw) solid var(--line); background: var(--bg);
+}
+.topbar h1 { font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem); font-weight: 800; }
+.topbar-tools { display: flex; align-items: center; gap: 10px; }
+.topbar .ibtn { width: 44px; height: 44px; box-shadow: none; }
+.who { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.who svg.i { width: 18px; height: 18px; }
+.admin-content { padding: 32px 36px 64px; display: grid; gap: 28px; align-content: start; }
+.btn-sm { min-height: 44px; padding: 0 16px; font-size: 14px; box-shadow: 3px 3px 0 var(--line); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+.section-title { font-size: 18px; font-weight: 800; margin-bottom: 14px; }
+.narrow { max-width: 620px; display: grid; gap: 20px; }
+
+/* ---------- Pesan (berhasil / gagal / info) ---------- */
+.alert {
+  display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px;
+  border: var(--bw) solid #111111; box-shadow: 4px 4px 0 var(--line); color: #111111; font-weight: 600;
+}
+.alert svg.i { margin-top: 2px; }
+.alert p { margin: 0; }
+.alert ul { margin: 6px 0 0; padding-left: 1.1em; font-weight: 500; }
+.alert a { color: #111111; }
+.alert-success { background: var(--mint); }
+.alert-error { background: var(--pink); }
+.alert-info { background: var(--blue); }
+.error-summary:focus { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* ---------- Dashboard ---------- */
+.hello { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px; }
+.hello-title { font: 800 22px/1.25 var(--body); }
+.stat-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.stat { position: relative; border-radius: 20px; padding: 20px; color: var(--on); display: grid; gap: 4px; align-content: start; min-width: 0; }
+.stat-ico { width: 44px; height: 44px; display: grid; place-items: center; background: #FFFFFF; border: var(--bw) solid #111111; border-radius: 12px; margin-bottom: 8px; color: #111111; }
+.stat-num { font: 800 40px/1 var(--display); letter-spacing: -.08em; font-variant-numeric: tabular-nums; }
+.stat-title { font-weight: 800; font-size: 16px; }
+.stat-cap { font-size: 14px; font-weight: 500; }
+.stat-link { margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; color: #111111; }
+.stat-soon { margin-top: 10px; font: 700 12px/1 var(--mono); }
+
+/* ---------- Formulir ---------- */
+.form { display: grid; gap: 18px; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 800; font-size: 14px; }
+.input {
+  width: 100%; min-height: 48px; padding: 11px 14px; font: 500 16px/1.4 var(--body);
+  color: var(--ink); background: var(--bg); border: var(--bw) solid var(--line); border-radius: 12px;
+}
+.input:focus-visible { outline: none; box-shadow: 4px 4px 0 var(--blue); }
+.input[aria-invalid="true"] { border-color: #D6336C; box-shadow: 4px 4px 0 var(--pink); }
+.input:disabled { opacity: .55; cursor: not-allowed; }
+.hint { font-size: 14px; color: var(--muted); }
+.err { display: flex; align-items: flex-start; gap: 6px; font-size: 14px; font-weight: 700; color: #C2255C; }
+:root[data-theme="dark"] .err { color: var(--pink); }
+.err svg.i { width: 16px; height: 16px; margin-top: 2px; }
+.pw { position: relative; }
+.pw .input { padding-right: 56px; }
+.pw-toggle {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 40px; display: grid; place-items: center; border: 0; background: none;
+  color: var(--muted); cursor: pointer; border-radius: 8px;
+}
+.pw-toggle:hover { color: var(--ink); }
+.pw-toggle .i-eye-off { display: none; }
+.pw-toggle[aria-pressed="true"] .i-eye { display: none; }
+.pw-toggle[aria-pressed="true"] .i-eye-off { display: block; }
+.form .btn { justify-self: start; }
+
+/* ---------- Halaman login ---------- */
+.auth { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
+.auth-card {
+  width: min(100%, 460px); background: var(--surface); border: 3px solid var(--line); border-radius: 26px;
+  box-shadow: 9px 9px 0 var(--line); padding: 30px; display: grid; gap: 20px;
+}
+.auth-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.auth h1 { font-size: 26px; font-weight: 800; line-height: 1.2; }
+.auth .sticker svg.i { width: 15px; height: 15px; }
+.auth-back { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--muted); justify-self: start; }
+.auth-back svg.i { width: 16px; height: 16px; transform: scaleX(-1); }
+
+/* ---------- HP & tablet ---------- */
+@media (max-width: 1023px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .side { position: sticky; top: 0; z-index: 40; height: auto; overflow: visible; flex-direction: column; gap: 0; padding: 12px 16px; border-right: 0; border-bottom: var(--bw) solid var(--line); }
+  .side-nav { padding-top: 12px; }
+  .js .side-nav { display: none; }
+  .js .side-nav.open { display: flex; }
+  .topbar { padding: 18px 16px; }
+  .admin-content { padding: 24px 16px 48px; }
+  .who { display: none; }
+}
+@media (max-width: 480px) {
+  .topbar-logout { display: none; } /* tombol Keluar tetap ada di menu */
+  .auth-card { padding: 22px; }
+}

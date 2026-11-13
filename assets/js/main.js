@@ -1,7 +1,28 @@
 /*
- * Skrip utama halaman publik.
- * Tahap 1: menu lipat di HP.
+ * Skrip utama (halaman publik dan panel admin).
+ * - Menu lipat di HP
+ * - Tombol tampilkan/sembunyikan password
+ * - Fokus ke ringkasan error setelah formulir gagal dikirim
  */
+
+/* Tombol tampilkan/sembunyikan password */
+(function () {
+  document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+      btn.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password');
+    });
+  });
+
+  var summary = document.querySelector('.error-summary');
+  if (summary) summary.focus();
+})();
+
+/* Menu lipat di HP */
 (function () {
   var btn = document.querySelector('.menu-btn');
   var menu = document.getElementById('nav-links');

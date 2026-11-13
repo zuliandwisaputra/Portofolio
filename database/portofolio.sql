@@ -31,7 +31,7 @@ DROP TABLE IF EXISTS admins;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ---------------------------------------------------------------------
--- 1. admins: akun admin (hanya satu). Akun dibuat di Tahap 2.
+-- 1. admins: akun admin (hanya satu, tidak ada halaman daftar).
 -- ---------------------------------------------------------------------
 CREATE TABLE admins (
   id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -230,6 +230,12 @@ CREATE TABLE login_attempts (
 -- =====================================================================
 -- DATA AWAL
 -- =====================================================================
+
+-- Akun admin bawaan (username: admin).
+-- Password sementaranya diberikan terpisah, BUKAN ditulis di file ini.
+-- WAJIB diganti lewat menu "Ganti password" setelah login pertama.
+INSERT INTO admins (username, password_hash) VALUES
+  ('admin', '$2y$10$lnhgZe/pihfibEsmPc6LMuzJSA5OC.h2RanXi9ynb5eOn03EeXQX.');
 
 -- Profil: nama, email, dan media sosial adalah data asli.
 -- Peran, tagline, teks Tentang, dan deskripsi masih CONTOH — ubah lewat menu Profil.

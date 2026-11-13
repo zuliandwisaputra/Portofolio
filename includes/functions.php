@@ -106,6 +106,9 @@ function db(): PDO
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
 
+    // Samakan zona waktu database dengan PHP (WIB), supaya NOW() dan tanggal tersimpan cocok
+    $pdo->exec("SET time_zone = '" . date('P') . "'");
+
     return $pdo;
 }
 
@@ -172,6 +175,23 @@ function not_found(): never
 /* ------------------------------------------------------------------
  * Tampilan
  * ------------------------------------------------------------------ */
+
+/** Tanggal sesuai bahasa aktif, misalnya "13 Nov 2026" atau "13 Nov 2026, 09.15". */
+function format_date(?string $value, bool $withTime = false): string
+{
+    $ts = $value ? strtotime($value) : false;
+    if ($ts === false) {
+        return '';
+    }
+    $months = lang() === 'en'
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    $text = date('j', $ts) . ' ' . $months[(int) date('n', $ts) - 1] . ' ' . date('Y', $ts);
+    if ($withTime) {
+        $text .= ', ' . date(lang() === 'en' ? 'H:i' : 'H.i', $ts);
+    }
+    return $text;
+}
 
 /** Ikon dari Tabler Icons (gambarnya ada di includes/icons.php). */
 function icon(string $name, string $class = 'i'): string
