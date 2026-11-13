@@ -246,3 +246,26 @@ textarea.textarea-sm { min-height: 110px; }
 .cv-current svg.i { width: 16px; height: 16px; }
 .cv-field .label { display: flex; align-items: center; }
 input[type="month"].input { min-height: 48px; }
+
+/* ---------- Pesan (Tahap 6) ---------- */
+.side-nav .nav-badge { margin-left: auto; font: 800 12px/1 var(--mono); font-style: normal; background: var(--pink); color: #111111; border: 2px solid var(--line); border-radius: 999px; padding: 3px 7px; }
+.status-new { background: var(--pink); color: #111111; }
+.status-read { background: transparent; color: var(--muted); border-style: dashed; }
+.data tr.unread td { font-weight: 700; }
+.data tr.unread td:first-child { box-shadow: inset 4px 0 0 var(--pink); }
+.data .col-from { min-width: 200px; overflow-wrap: anywhere; }
+.data .col-msg { min-width: 220px; overflow-wrap: anywhere; }
+.msg { display: grid; gap: 20px; max-width: 820px; }
+.msg-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 24px; }
+.msg-head h2 { font-size: 22px; font-weight: 800; overflow-wrap: anywhere; }
+.msg-head a { font-weight: 700; overflow-wrap: anywhere; }
+.msg-meta { display: grid; gap: 6px; justify-items: end; text-align: right; }
+.msg-body { font-size: 16px; line-height: 1.75; overflow-wrap: anywhere; background: var(--bg); border: 2px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.msg-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.msg-actions form { margin: 0; }
+.confirm { grid-template-columns: minmax(0, 1fr); }
+.confirm h2, .confirm p { overflow-wrap: anywhere; }
+.msg-quote { margin: 0; padding: 12px 16px; border-left: 4px solid var(--pink); background: var(--bg); border-radius: 0 10px 10px 0; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .msg-meta { justify-items: start; text-align: left; }
+}

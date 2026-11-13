@@ -372,9 +372,26 @@ a.cert-img { color: inherit; text-decoration: none; }
 .mail:hover { transform: translate(-2px, -2px); }
 .contact .social .ibtn { background: #FFFFFF; color: #111111; border-color: #111111; box-shadow: 3px 3px 0 #111111; }
 .contact :focus-visible { outline-color: #111111; }
-.c-card { align-self: start; background: var(--surface); color: var(--ink); border: 3px solid #111111; border-radius: 20px; padding: 24px; display: grid; gap: 14px; transform: rotate(1deg); box-shadow: 6px 6px 0 #111111; }
-.c-card .c-ico { width: 48px; height: 48px; display: grid; place-items: center; border: var(--bw) solid var(--line); border-radius: 14px; background: var(--blue); color: var(--on); }
-.c-card p { color: var(--muted); font-weight: 500; }
+.c-form { align-self: start; background: var(--surface); color: var(--ink); border: 3px solid #111111; border-radius: 20px; padding: 24px; display: grid; gap: 16px; transform: rotate(1deg); box-shadow: 6px 6px 0 #111111; }
+.c-form :focus-visible { outline-color: var(--focus); }
+.c-field { display: grid; gap: 6px; }
+.c-field label { font-weight: 800; font-size: 14px; }
+.c-input { width: 100%; min-height: 48px; padding: 11px 14px; font: 500 16px/1.4 var(--body); color: var(--ink); background: var(--bg); border: var(--bw) solid var(--line); border-radius: 12px; }
+.c-input::placeholder { color: var(--muted); opacity: .8; }
+textarea.c-input { min-height: 130px; resize: vertical; }
+.c-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; box-shadow: 4px 4px 0 var(--blue); }
+.c-input[aria-invalid="true"] { border-color: #D6336C; box-shadow: 4px 4px 0 #D6336C; }
+.c-hint { font-size: 13px; color: var(--muted); }
+.c-err { display: flex; align-items: flex-start; gap: 6px; font-size: 14px; font-weight: 700; color: #C2255C; }
+:root[data-theme="dark"] .c-err { color: #FF8FB5; }
+.c-err svg.i { width: 17px; height: 17px; margin-top: 2px; }
+.c-alert { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: var(--bw) solid #111111; border-radius: 12px; color: #111111; font-weight: 700; font-size: 15px; box-shadow: 3px 3px 0 #111111; }
+.c-alert.ok { background: var(--mint); }
+.c-alert.bad { background: var(--pink); }
+.c-alert svg.i { margin-top: 1px; }
+.c-alert:focus { outline: 3px solid var(--focus); outline-offset: 3px; }
+.c-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.c-form .btn { justify-self: start; }
 
 /* ---------- Halaman daftar project ---------- */
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; list-style: none; padding: 0; }
@@ -464,7 +481,7 @@ a.cert-img { color: inherit; text-decoration: none; }
   .gallery { gap: 14px; }
   .sec .card { padding: 22px; }
   .contact { padding: 24px; border-radius: 22px; box-shadow: 7px 7px 0 var(--line); }
-  .c-card { transform: none; padding: 18px; }
+  .c-form { transform: none; padding: 18px; }
   .tl { padding-left: 28px; } .tl > li::before { left: -28px; width: 18px; height: 18px; } .tl::before { left: 8px; }
   .skill .wm { width: 104px; height: 104px; }
   .pd-cover { box-shadow: 6px 6px 0 var(--line); border-radius: 16px; }

@@ -74,6 +74,28 @@ return [
     'contact.body'       => 'Have a project, an internship offer, or just want to say hi? Send a message through the form, or email me directly.',
     'contact.email'      => 'Send an email',
     'contact.whatsapp'   => 'Chat on WhatsApp',
+    'contact.form_title' => 'Contact form',
+    'contact.name'       => 'Name',
+    'contact.name_ph'    => 'Your name',
+    'contact.email_label'=> 'Email',
+    'contact.email_ph'   => 'name@gmail.com',
+    'contact.message'    => 'Message',
+    'contact.message_ph' => 'Tell me what you need',
+    'contact.message_hint' => 'At least :min, at most :max characters.',
+    'contact.send'       => 'Send message',
+    'contact.trap'       => 'Leave this field empty',
+    'contact.ok'         => 'Thank you, :name! Your message has been sent. I will reply by email.',
+    'contact.err.summary'          => 'Your message was not sent yet. Please check the highlighted fields below.',
+    'contact.err.name_required'    => 'Please enter your name.',
+    'contact.err.name_long'        => 'Name can be at most :n characters.',
+    'contact.err.email_required'   => 'Please enter your email so I can reply.',
+    'contact.err.email_invalid'    => 'This email address does not look right. Example: name@gmail.com',
+    'contact.err.message_required' => 'Please write a message.',
+    'contact.err.message_short'    => 'Message is too short, at least :n characters.',
+    'contact.err.message_long'     => 'Message is too long, at most :n characters.',
+    'contact.err.rate'             => 'You have sent :max messages in the last :minutes minutes. Please try again in about :m minutes, or email me directly.',
+    'contact.err.expired'          => 'The form expired and your message was not sent. Please click "Send message" once more.',
+    'contact.err.server'           => 'The message could not be sent because of a server problem. Please try again later, or email me directly.',
 
     // Project pages
     'page.projects'      => 'All projects',
@@ -107,7 +129,4 @@ return [
     '404.title'          => 'Oops, this page does not exist.',
     '404.body'           => 'The address may have a typo, or the page has moved.',
     '404.back'           => 'Back to home',
-
-    // Temporary (replaced in Stage 6)
-    'wip.contact'        => 'The contact form arrives in Stage 6. Meanwhile, reach me by email or social media.',
 ];

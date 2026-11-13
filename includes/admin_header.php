@@ -19,6 +19,11 @@ $pageTitle  = $pageTitle ?? 'Panel admin';
 $activeMenu = $activeMenu ?? '';
 $flash      = take_flash();
 
+// Jumlah pesan belum dibaca, tampil sebagai angka di menu Pesan
+$stmt = db()->prepare('SELECT COUNT(*) FROM messages WHERE is_read = 0');
+$stmt->execute();
+$unreadMessages = (int) $stmt->fetchColumn();
+
 // [kunci, label, alamat, ikon, tahap selesai]  (alamat null = belum dibuat)
 $menu = [
     ['dashboard',    'Dashboard',                '/admin/',                   'dashboard', null],
@@ -26,7 +31,7 @@ $menu = [
     ['skills',       'Skill',                    '/admin/skills/',            'tools',     null],
     ['experiences',  'Pengalaman & pendidikan',  '/admin/experiences/',       'school',    null],
     ['achievements', 'Sertifikat & lomba',       '/admin/achievements/',      'award',     null],
-    ['messages',     'Pesan',                    null,                        'inbox',     'Tahap 6'],
+    ['messages',     'Pesan',                    '/admin/messages/',          'inbox',     null],
     ['profile',      'Profil',                   '/admin/profile.php',        'user',      null],
     ['password',     'Ganti password',           '/admin/password.php',       'key',       null],
 ];
@@ -72,7 +77,7 @@ $menu = [
         <?php foreach ($menu as [$key, $label, $url, $ico, $stage]): ?>
         <li>
           <?php if ($url !== null): ?>
-          <a href="<?= e($url) ?>" <?= $key === $activeMenu ? 'aria-current="page"' : '' ?>><?= icon($ico) ?><span><?= e($label) ?></span></a>
+          <a href="<?= e($url) ?>" <?= $key === $activeMenu ? 'aria-current="page"' : '' ?>><?= icon($ico) ?><span><?= e($label) ?></span><?php if ($key === 'messages' && $unreadMessages > 0): ?><em class="nav-badge"><?= e($unreadMessages) ?><span class="sr-only"> belum dibaca</span></em><?php endif; ?></a>
           <?php else: ?>
           <span class="soon" aria-disabled="true"><?= icon($ico) ?><span><?= e($label) ?></span><em><?= e($stage) ?></em></span>
           <?php endif; ?>

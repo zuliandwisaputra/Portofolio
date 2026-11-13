@@ -74,6 +74,28 @@ return [
     'contact.body'       => 'Punya project, tawaran magang, atau sekadar mau menyapa? Kirim pesan lewat form, atau email saya langsung.',
     'contact.email'      => 'Kirim email',
     'contact.whatsapp'   => 'Chat WhatsApp',
+    'contact.form_title' => 'Form kontak',
+    'contact.name'       => 'Nama',
+    'contact.name_ph'    => 'Nama kamu',
+    'contact.email_label'=> 'Email',
+    'contact.email_ph'   => 'nama@gmail.com',
+    'contact.message'    => 'Pesan',
+    'contact.message_ph' => 'Ceritakan kebutuhanmu',
+    'contact.message_hint' => 'Minimal :min, maksimal :max karakter.',
+    'contact.send'       => 'Kirim pesan',
+    'contact.trap'       => 'Jangan isi kolom ini',
+    'contact.ok'         => 'Terima kasih, :name! Pesanmu sudah terkirim. Saya akan membalas lewat email.',
+    'contact.err.summary'          => 'Pesan belum terkirim. Periksa isian yang ditandai di bawah.',
+    'contact.err.name_required'    => 'Nama wajib diisi.',
+    'contact.err.name_long'        => 'Nama maksimal :n karakter.',
+    'contact.err.email_required'   => 'Email wajib diisi supaya saya bisa membalas.',
+    'contact.err.email_invalid'    => 'Format email belum benar. Contoh: nama@gmail.com',
+    'contact.err.message_required' => 'Pesan wajib diisi.',
+    'contact.err.message_short'    => 'Pesan terlalu pendek, minimal :n karakter.',
+    'contact.err.message_long'     => 'Pesan terlalu panjang, maksimal :n karakter.',
+    'contact.err.rate'             => 'Kamu sudah mengirim :max pesan dalam :minutes menit terakhir. Coba lagi sekitar :m menit lagi, atau kirim email langsung.',
+    'contact.err.expired'          => 'Formulir sudah kedaluwarsa. Pesanmu belum terkirim, silakan klik "Kirim pesan" sekali lagi.',
+    'contact.err.server'           => 'Pesan gagal terkirim karena gangguan server. Coba lagi nanti, atau kirim email langsung.',
 
     // Halaman project
     'page.projects'      => 'Semua project',
@@ -107,7 +129,4 @@ return [
     '404.title'          => 'Ups, halaman ini tidak ada.',
     '404.body'           => 'Alamatnya mungkin salah ketik, atau halamannya sudah dipindah.',
     '404.back'           => 'Kembali ke beranda',
-
-    // Sementara (diganti di Tahap 6)
-    'wip.contact'        => 'Form kontak dibuat di Tahap 6. Sementara itu, hubungi lewat email atau media sosial di samping.',
 ];

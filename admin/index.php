@@ -28,7 +28,7 @@ $cards = [
     ['Skill', $count['skills'], 'dikelompokkan per kategori', 'mint', 'tools', '/admin/skills/', null],
     ['Pengalaman & pendidikan', $count['experiences'], 'kerja, organisasi, pendidikan', 'lav', 'school', '/admin/experiences/', null],
     ['Sertifikat & lomba', $count['achievements'], 'sertifikat, lomba, penghargaan', 'orange', 'award', '/admin/achievements/', null],
-    ['Pesan belum dibaca', $count['messages_unread'], 'dari ' . $count['messages_total'] . ' pesan masuk', 'pink', 'inbox', null, 'Tahap 6'],
+    ['Pesan belum dibaca', $count['messages_unread'], 'dari ' . $count['messages_total'] . ' pesan masuk', 'pink', 'inbox', '/admin/messages/', null],
 ];
 
 $previousLogin = $_SESSION['previous_login_at'] ?? null;

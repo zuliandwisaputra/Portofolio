@@ -10,6 +10,7 @@
 
 require __DIR__ . '/includes/functions.php';
 require ROOT_PATH . '/includes/upload.php';
+require ROOT_PATH . '/includes/contact.php';
 
 lang_from_url('');
 $profile  = profile();
@@ -20,6 +21,14 @@ $roles    = role_list($profile);
 $socials  = social_links($profile);
 $cv       = cv_url($profile);
 $email    = filter_var((string) ($profile['email'] ?? ''), FILTER_VALIDATE_EMAIL) ?: '';
+$whatsapp = whatsapp_url($profile['whatsapp'] ?? ''); // kosong di Profil = tombol WhatsApp tidak tampil
+
+// Form kontak: hasil kiriman terakhir (sekali tampil) dan token CSRF.
+// Harus disiapkan sebelum HTML dikirim karena memakai sesi (cookie).
+$contact    = contact_take_result();
+$cErrors    = $contact['errors'] ?? [];
+$cOld       = $contact['old'] ?? [];
+$csrfField  = csrf_field();
 
 // ---------- Ambil isi dari database (hanya yang berstatus Tampil) ----------
 $stmt = db()->prepare(
@@ -384,6 +393,9 @@ require ROOT_PATH . '/includes/header.php';
         <?php if ($email !== ''): ?>
         <a class="mail" href="mailto:<?= e($email) ?>"><?= icon('mail') ?><span><span class="sr-only"><?= e(t('contact.email')) ?>: </span><?= e($email) ?></span></a>
         <?php endif; ?>
+        <?php if ($whatsapp !== ''): ?>
+        <a class="mail" href="<?= e($whatsapp) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?><span><?= e(t('contact.whatsapp')) ?></span></a>
+        <?php endif; ?>
         <?php if ($socials): ?>
         <ul class="social">
           <?php foreach ($socials as $s): ?>
@@ -392,11 +404,56 @@ require ROOT_PATH . '/includes/header.php';
         </ul>
         <?php endif; ?>
       </div>
-      <!-- Sementara: form kontak dibuat di Tahap 6 -->
-      <div class="c-card">
-        <span class="c-ico" aria-hidden="true"><?= icon('send') ?></span>
-        <p><?= e(t('wip.contact')) ?></p>
-      </div>
+
+      <?php
+      // Atribut untuk isian yang salah: ditandai dan dihubungkan ke pesan kesalahannya
+      $cAttr = function (string $key, string $hintId = '') use ($cErrors): string {
+          $ids = trim($hintId . (isset($cErrors[$key]) ? ' c-' . $key . '-err' : ''));
+          return (isset($cErrors[$key]) ? ' aria-invalid="true"' : '') . ($ids !== '' ? ' aria-describedby="' . $ids . '"' : '');
+      };
+      $cError = fn (string $key): string => isset($cErrors[$key])
+          ? '<p class="c-err" id="c-' . $key . '-err">' . icon('alert') . e($cErrors[$key]) . '</p>' : '';
+      ?>
+      <form class="c-form" method="post" action="/contact_send.php" novalidate aria-labelledby="c-form-title">
+        <h3 class="sr-only" id="c-form-title"><?= e(t('contact.form_title')) ?></h3>
+        <?= $csrfField ?>
+        <input type="hidden" name="lang" value="<?= e(lang()) ?>">
+
+        <?php if ($contact): ?>
+        <div class="c-alert <?= $contact['type'] === 'success' ? 'ok' : 'bad' ?>" role="<?= $contact['type'] === 'success' ? 'status' : 'alert' ?>" tabindex="-1" data-autofocus>
+          <?= icon($contact['type'] === 'success' ? 'circle-check' : 'alert') ?>
+          <p><?= e($contact['message']) ?></p>
+        </div>
+        <?php endif; ?>
+
+        <div class="c-field">
+          <label for="c-name"><?= e(t('contact.name')) ?></label>
+          <input class="c-input" id="c-name" name="name" type="text" autocomplete="name" required maxlength="<?= CONTACT_NAME_MAX ?>"
+                 placeholder="<?= e(t('contact.name_ph')) ?>" value="<?= e($cOld['name'] ?? '') ?>"<?= $cAttr('name') ?>>
+          <?= $cError('name') ?>
+        </div>
+        <div class="c-field">
+          <label for="c-email"><?= e(t('contact.email_label')) ?></label>
+          <input class="c-input" id="c-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="<?= CONTACT_EMAIL_MAX ?>"
+                 placeholder="<?= e(t('contact.email_ph')) ?>" value="<?= e($cOld['email'] ?? '') ?>"<?= $cAttr('email') ?>>
+          <?= $cError('email') ?>
+        </div>
+        <div class="c-field">
+          <label for="c-message"><?= e(t('contact.message')) ?></label>
+          <textarea class="c-input" id="c-message" name="message" rows="5" required maxlength="<?= CONTACT_MESSAGE_MAX ?>"
+                    placeholder="<?= e(t('contact.message_ph')) ?>"<?= $cAttr('message', 'c-message-hint') ?>><?= e($cOld['message'] ?? '') ?></textarea>
+          <p class="c-hint" id="c-message-hint"><?= e(t('contact.message_hint', ['min' => CONTACT_MESSAGE_MIN, 'max' => CONTACT_MESSAGE_MAX])) ?></p>
+          <?= $cError('message') ?>
+        </div>
+
+        <!-- Isian jebakan untuk bot: disembunyikan dari pengunjung dan pembaca layar -->
+        <div class="c-trap" aria-hidden="true">
+          <label for="c-<?= CONTACT_HONEYPOT ?>"><?= e(t('contact.trap')) ?></label>
+          <input id="c-<?= CONTACT_HONEYPOT ?>" name="<?= CONTACT_HONEYPOT ?>" type="text" tabindex="-1" autocomplete="off" value="">
+        </div>
+
+        <button class="btn bg-blue" type="submit"><?= e(t('contact.send')) ?><?= icon('send', 'i nudge') ?></button>
+      </form>
     </div>
   </section>
 

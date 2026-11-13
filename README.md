@@ -14,7 +14,7 @@ tanpa library animasi. Rincian kebutuhan ada di [PRD.md](PRD.md).
 | 3. CRUD project & skill | Tambah/ubah/hapus project & skill, unggah + pengecilan gambar, galeri, pilihan teknologi | Selesai |
 | 4. CRUD lainnya & profil | Pengalaman & pendidikan (+ foto), sertifikat & lomba, menu Profil, unggah CV | Selesai |
 | 5. Halaman publik | Beranda lengkap, daftar project + saring kategori, detail project + galeri, SEO dasar, sitemap & robots | Selesai |
-| 6. Kontak | | Belum |
+| 6. Kontak | Form kontak (CSRF, isian jebakan bot, batas 3 pesan/10 menit), menu Pesan di admin | Selesai |
 | 7. Animasi | | Belum |
 | 8. Uji & rilis | | Belum |
 
@@ -63,15 +63,18 @@ Salin hasilnya (diawali `$2y$`), buka HeidiSQL → tabel `admins` → tempel di 
 ```
 index.php, projects.php, project.php, 404.php   halaman publik (beranda, daftar project, detail project, 404)
 sitemap.php, robots.php                         /sitemap.xml dan /robots.txt untuk mesin pencari (dibuat otomatis)
+contact_send.php                                pemroses form kontak di beranda
 admin/       login.php, logout.php, index.php (dashboard), password.php,
              projects/, skills/, experiences/, achievements/ (index, create, edit, delete, form),
+             messages/ (index = daftar pesan, view = baca, mark = tandai dibaca, delete = hapus),
              profile.php (data diri, foto hero, CV, media sosial, pengaturan)
 .htaccess                                       alamat rapi (/id/, /en/) dan aturan keamanan
 config/      app.php (pengaturan umum), database.example.php (contoh pengaturan database)
 includes/    functions.php, lang.php, header.php, footer.php, icons.php,
              auth.php (login & sesi), csrf.php (token formulir), admin_header.php, admin_footer.php,
              upload.php (unggah & pengecilan gambar), form.php (bantuan formulir & tabel admin),
-             project_card.php (kartu project di beranda & daftar project)
+             project_card.php (kartu project di beranda & daftar project),
+             contact.php (aturan form kontak & pembatas pesan)
 lang/        id.php, en.php (teks tombol dan judul bagian)
 assets/      css/, js/, fonts/ (font disimpan sendiri), img/
 uploads/     file unggahan dari panel admin (PHP tidak bisa dijalankan di sini)
@@ -92,7 +95,18 @@ database/    portofolio.sql (tabel + data awal)
 - Sertifikat: 6 pertama tampil, sisanya muncul lewat tombol *Tampilkan lebih banyak*.
 - Statistik hero dihitung otomatis: jumlah project, sertifikat, dan lomba (penghargaan tidak dihitung).
 - Tombol *Unduh CV* hanya muncul kalau CV sudah diunggah. Di versi Inggris, kalau CV Inggris kosong dipakai CV Indonesia.
-- Nomor WhatsApp tidak ditampilkan di website.
+- Tombol WhatsApp hanya muncul kalau nomor diisi di menu Profil. Kosongkan supaya tidak tampil (saat ini kosong).
+
+## Form kontak & menu Pesan
+
+- Form di bagian Kontak beranda: nama, email, pesan (10–3000 karakter). Kesalahan ditampilkan di dekat isian
+  dan isian lain tidak hilang. Setelah terkirim muncul ucapan terima kasih; menekan F5 tidak mengirim dua kali.
+- Pengaman: token CSRF, isian jebakan untuk bot (bot dianggap terkirim tapi tidak disimpan), dan
+  batas **3 pesan per 10 menit** dari alamat IP yang sama.
+- Alamat IP tidak disimpan mentah, hanya sidik acaknya (`ip_hash`) yang dibuat dengan kunci dari `config/database.php`.
+- Panel admin → **Pesan**: daftar 10 per halaman (yang belum dibaca bertanda *Baru*), baca, balas lewat email,
+  tandai sudah/belum dibaca, dan hapus (dengan konfirmasi). Angka pesan belum dibaca tampil di menu dan Dashboard.
+- Notifikasi email saat ada pesan masuk belum ada (ditunda ke versi berikutnya sesuai PRD); cek menu Pesan secara berkala.
 
 ### Gambar yang perlu kamu isi sendiri (lewat panel admin)
 

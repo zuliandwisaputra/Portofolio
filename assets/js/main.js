@@ -2,7 +2,7 @@
  * Skrip utama (halaman publik dan panel admin).
  * - Menu lipat di HP
  * - Tombol tampilkan/sembunyikan password
- * - Fokus ke ringkasan error setelah formulir gagal dikirim
+ * - Fokus ke ringkasan error / hasil form kontak setelah formulir dikirim
  * - Tombol "Tampilkan lebih banyak" (sertifikat)
  */
 
@@ -19,8 +19,17 @@
     });
   });
 
-  var summary = document.querySelector('.error-summary');
-  if (summary) summary.focus();
+  // Ringkasan error (admin) atau hasil kirim form kontak: fokus ke sana supaya langsung terbaca.
+  // Kalau alamat punya #bagian, browser baru melompat ke bagian itu setelah halaman selesai dimuat
+  // (dan saat itu fokus dilepas), jadi fokus dipasang setelahnya.
+  var summary = document.querySelector('.error-summary, [data-autofocus]');
+  if (summary) {
+    if (location.hash && document.readyState !== 'complete') {
+      window.addEventListener('load', function () { setTimeout(function () { summary.focus(); }, 0); });
+    } else {
+      summary.focus();
+    }
+  }
 })();
 
 /* Menu lipat di HP */
