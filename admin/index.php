@@ -26,8 +26,8 @@ $cards = [
     ['Project', $count['projects_published'] + $count['projects_draft'],
         $count['projects_published'] . ' terbit · ' . $count['projects_draft'] . ' draf', 'yellow', 'folder', '/admin/projects/', null],
     ['Skill', $count['skills'], 'dikelompokkan per kategori', 'mint', 'tools', '/admin/skills/', null],
-    ['Pengalaman & pendidikan', $count['experiences'], 'kerja, organisasi, pendidikan', 'lav', 'school', null, 'Tahap 4'],
-    ['Sertifikat & lomba', $count['achievements'], 'sertifikat, lomba, penghargaan', 'orange', 'award', null, 'Tahap 4'],
+    ['Pengalaman & pendidikan', $count['experiences'], 'kerja, organisasi, pendidikan', 'lav', 'school', '/admin/experiences/', null],
+    ['Sertifikat & lomba', $count['achievements'], 'sertifikat, lomba, penghargaan', 'orange', 'award', '/admin/achievements/', null],
     ['Pesan belum dibaca', $count['messages_unread'], 'dari ' . $count['messages_total'] . ' pesan masuk', 'pink', 'inbox', null, 'Tahap 6'],
 ];
 
@@ -44,7 +44,7 @@ require ROOT_PATH . '/includes/admin_header.php';
       <?php if ($previousLogin): ?>
         Login sebelumnya: <?= e(format_date($previousLogin, true)) ?> WIB.
       <?php else: ?>
-        Ini login pertamamu. Segera ganti password bawaan lewat menu <a href="/admin/password.php">Ganti password</a>.
+        Ini login pertamamu. Segera ganti password bawaan lewat menu <a href="/admin/password.php">Ganti password</a>, lalu lengkapi <a href="/admin/profile.php">Profil</a>.
       <?php endif; ?>
     </p>
   </div>

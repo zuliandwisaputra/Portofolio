@@ -235,3 +235,14 @@ svg.i.flip { transform: scaleX(-1); }
   .g-item img { width: 100%; }
   .cover-current img { width: 100%; }
 }
+
+/* =====================================================================
+   Tahap 4: profil & CV
+   ===================================================================== */
+textarea.textarea-sm { min-height: 110px; }
+.cv-field { display: grid; gap: 10px; align-content: start; padding: 16px; border: 2px dashed var(--line); border-radius: 14px; }
+.cv-current { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+.cv-current a { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--ink); }
+.cv-current svg.i { width: 16px; height: 16px; }
+.cv-field .label { display: flex; align-items: center; }
+input[type="month"].input { min-height: 48px; }

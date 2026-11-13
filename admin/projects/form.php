@@ -329,32 +329,6 @@ function project_save(array $d, ?array $project, ?array $cover, array $newFiles,
     return $id;
 }
 
-/** Satu pasang isian Indonesia + Inggris. */
-function bilingual_field(array $d, array $errors, string $base, string $labelId, string $labelEn, int $max, bool $required, bool $textarea = false, ?string $hint = null): void
-{
-    ?>
-    <div class="pair">
-      <?php foreach (['ind' => [$labelId, 'ID', $required], 'eng' => [$labelEn, 'EN', false]] as $suffix => [$label, $tag, $req]):
-          $name = $base . '_' . $suffix;
-          $hintId = $hint && $suffix === 'ind' ? $name . '-hint' : null; ?>
-      <div class="field">
-        <label for="<?= e($name) ?>"><span class="lang-tag lang-<?= e($suffix) ?>"><?= e($tag) ?></span><?= e($label) ?>
-          <?= $req ? '<span class="req" aria-hidden="true">*</span>' : '<span class="opt">(opsional)</span>' ?></label>
-        <?php if ($textarea): ?>
-        <textarea class="input" id="<?= e($name) ?>" name="<?= e($name) ?>" rows="7" maxlength="<?= e($max) ?>"
-                  <?= $req ? 'required' : '' ?><?= field_attrs($errors, $name, $hintId) ?>><?= e($d[$name]) ?></textarea>
-        <?php else: ?>
-        <input class="input" id="<?= e($name) ?>" name="<?= e($name) ?>" type="text" maxlength="<?= e($max) ?>"
-               value="<?= e($d[$name]) ?>" <?= $req ? 'required' : '' ?><?= field_attrs($errors, $name, $hintId) ?>>
-        <?php endif; ?>
-        <?php if ($hintId): ?><p class="hint" id="<?= e($hintId) ?>"><?= e($hint) ?></p><?php endif; ?>
-        <?= field_error($errors, $name) ?>
-      </div>
-      <?php endforeach; ?>
-    </div>
-    <?php
-}
-
 /**
  * Tampilkan formulir project.
  * $project = baris project (saat ubah) atau null (saat tambah).

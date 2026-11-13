@@ -199,6 +199,19 @@ function icon(string $name, string $class = 'i'): string
     return '<svg class="' . e($class) . '" aria-hidden="true" focusable="false"><use href="#i-' . e($name) . '"/></svg>';
 }
 
+/** Bulan & tahun sesuai bahasa aktif, misalnya "Jul 2023". */
+function format_month(?string $value): string
+{
+    $ts = $value ? strtotime($value) : false;
+    if ($ts === false) {
+        return '';
+    }
+    $months = lang() === 'en'
+        ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    return $months[(int) date('n', $ts) - 1] . ' ' . date('Y', $ts);
+}
+
 /** Inisial nama untuk logo, misalnya "Zulian Dwi Saputra" → "ZDS". */
 function initials(string $name): string
 {

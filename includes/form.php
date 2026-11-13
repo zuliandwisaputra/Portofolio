@@ -87,6 +87,97 @@ function check_url(string $value, string $label): ?string
     return null;
 }
 
+/**
+ * Satu pasang isian Indonesia (wajib/opsional) + Inggris (selalu opsional), berdampingan.
+ * Nama isian: <base>_ind dan <base>_eng (sesuai kolom database).
+ */
+function bilingual_field(array $d, array $errors, string $base, string $labelId, string $labelEn, int $max, bool $required, bool $textarea = false, ?string $hint = null): void
+{
+    ?>
+    <div class="pair">
+      <?php foreach (['ind' => [$labelId, 'ID', $required], 'eng' => [$labelEn, 'EN', false]] as $suffix => [$label, $tag, $req]):
+          $name = $base . '_' . $suffix;
+          $hintId = $hint && $suffix === 'ind' ? $name . '-hint' : null; ?>
+      <div class="field">
+        <label for="<?= e($name) ?>"><span class="lang-tag lang-<?= e($suffix) ?>"><?= e($tag) ?></span><?= e($label) ?>
+          <?= $req ? '<span class="req" aria-hidden="true">*</span>' : '<span class="opt">(opsional)</span>' ?></label>
+        <?php if ($textarea): ?>
+        <textarea class="input" id="<?= e($name) ?>" name="<?= e($name) ?>" rows="7" maxlength="<?= e($max) ?>"
+                  <?= $req ? 'required' : '' ?><?= field_attrs($errors, $name, $hintId) ?>><?= e($d[$name]) ?></textarea>
+        <?php else: ?>
+        <input class="input" id="<?= e($name) ?>" name="<?= e($name) ?>" type="text" maxlength="<?= e($max) ?>"
+               value="<?= e($d[$name]) ?>" <?= $req ? 'required' : '' ?><?= field_attrs($errors, $name, $hintId) ?>>
+        <?php endif; ?>
+        <?php if ($hintId): ?><p class="hint" id="<?= e($hintId) ?>"><?= e($hint) ?></p><?php endif; ?>
+        <?= field_error($errors, $name) ?>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php
+}
+
+/**
+ * Isian satu gambar: pratinjau gambar saat ini + centang "hapus" + pilih file baru.
+ */
+function image_field(array $errors, string $name, string $label, string $folder, ?string $current, bool $removeChecked, string $hint): void
+{
+    [$w, $h] = image_size($folder, $current, true);
+    ?>
+    <?php if ($current && $w): ?>
+    <div class="cover-current">
+      <img src="<?= e(upload_url($folder, $current, true)) ?>" width="<?= e($w) ?>" height="<?= e($h) ?>" alt="<?= e($label) ?> saat ini">
+      <label class="choice"><input type="checkbox" name="remove_<?= e($name) ?>" value="1" <?= $removeChecked ? 'checked' : '' ?>> Hapus gambar ini</label>
+    </div>
+    <?php endif; ?>
+    <div class="field">
+      <label for="<?= e($name) ?>"><?= $current ? 'Ganti ' . e(mb_strtolower($label)) : e($label) ?> <span class="opt">(opsional)</span></label>
+      <input class="input file" id="<?= e($name) ?>" name="<?= e($name) ?>" type="file" accept="image/jpeg,image/png,image/webp"<?= field_attrs($errors, $name, $name . '-hint') ?>>
+      <p class="hint" id="<?= e($name) ?>-hint"><?= e($hint) ?></p>
+      <?= field_error($errors, $name) ?>
+    </div>
+    <?php
+}
+
+/** Pilihan jenis (radio) sebagai fieldset. */
+function choice_field(array $errors, string $name, string $legend, array $options, string $selected): void
+{
+    ?>
+    <fieldset class="field" id="<?= e($name) ?>"<?= isset($errors[$name]) ? ' aria-describedby="' . e($name) . '-err"' : '' ?>>
+      <legend><?= e($legend) ?> <span class="req" aria-hidden="true">*</span></legend>
+      <div class="choices">
+        <?php foreach ($options as $value => $label): ?>
+        <label class="choice"><input type="radio" name="<?= e($name) ?>" value="<?= e($value) ?>" <?= $selected === (string) $value ? 'checked' : '' ?>> <?= e($label) ?></label>
+        <?php endforeach; ?>
+      </div>
+      <?= field_error($errors, $name) ?>
+    </fieldset>
+    <?php
+}
+
+/* ------------------------------------------------------------------
+ * Bulan & tahun (isian <input type="month">, disimpan sebagai tanggal 1)
+ * ------------------------------------------------------------------ */
+
+/** '2023-07-01' → '2023-07' untuk isian bulan. */
+function month_value(?string $date): string
+{
+    return $date ? substr($date, 0, 7) : '';
+}
+
+/** '2023-07' atau '2023-07-15' → '2023-07-01'. Null kalau tidak valid. */
+function parse_month(string $value): ?string
+{
+    if (!preg_match('/^(\d{4})-(\d{2})(?:-(\d{2}))?$/', trim($value), $m)) {
+        return null;
+    }
+    $year = (int) $m[1];
+    $month = (int) $m[2];
+    if ($year < 1990 || $year > (int) date('Y') + 1 || $month < 1 || $month > 12) {
+        return null;
+    }
+    return sprintf('%04d-%02d-01', $year, $month);
+}
+
 /* ------------------------------------------------------------------
  * Halaman tabel (10 baris per halaman)
  * ------------------------------------------------------------------ */

@@ -12,7 +12,7 @@ tanpa library animasi. Rincian kebutuhan ada di [PRD.md](PRD.md).
 | 1. Fondasi | Struktur folder, database, koneksi PDO, dua bahasa, dua tema, header & footer | Selesai |
 | 2. Login admin | Login, logout, proteksi halaman, CSRF, pengunci gagal login, ganti password | Selesai |
 | 3. CRUD project & skill | Tambah/ubah/hapus project & skill, unggah + pengecilan gambar, galeri, pilihan teknologi | Selesai |
-| 4. CRUD lainnya & profil | | Belum |
+| 4. CRUD lainnya & profil | Pengalaman & pendidikan (+ foto), sertifikat & lomba, menu Profil, unggah CV | Selesai |
 | 5. Halaman publik | | Belum |
 | 6. Kontak | | Belum |
 | 7. Animasi | | Belum |
@@ -63,7 +63,8 @@ Salin hasilnya (diawali `$2y$`), buka HeidiSQL → tabel `admins` → tempel di 
 ```
 index.php, projects.php, project.php, 404.php   halaman publik
 admin/       login.php, logout.php, index.php (dashboard), password.php,
-             projects/ dan skills/ (index, create, edit, delete, form)
+             projects/, skills/, experiences/, achievements/ (index, create, edit, delete, form),
+             profile.php (data diri, foto hero, CV, media sosial, pengaturan)
 .htaccess                                       alamat rapi (/id/, /en/) dan aturan keamanan
 config/      app.php (pengaturan umum), database.example.php (contoh pengaturan database)
 includes/    functions.php, lang.php, header.php, footer.php, icons.php,
@@ -80,6 +81,8 @@ database/    portofolio.sql (tabel + data awal)
 - Format JPG, PNG, atau WebP, maksimal 2 MB per file. Isi file diperiksa, bukan hanya namanya.
 - Gambar disimpan ulang sebagai WebP dengan nama acak: versi besar (lebar maks. 1600 px) dan versi kecil 600 px.
 - Galeri project maksimal 8 gambar; teks alt dibuat otomatis dari judul dan bisa diubah.
+- Foto hero disimpan 800 px + 400 px. Foto pengalaman dan gambar sertifikat 1600 px + 600 px.
+- CV: PDF maksimal 5 MB, satu file per bahasa (isi file harus benar-benar PDF).
 - Batas unggah PHP dinaikkan lewat `.htaccess` (Laragon/Apache) dan `.user.ini` (hosting PHP-FPM).
 - Kalau muncul pesan "folder tidak bisa ditulis" di hosting, beri izin tulis (755) ke folder `uploads/`.
 

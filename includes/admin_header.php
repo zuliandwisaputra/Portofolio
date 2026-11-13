@@ -24,10 +24,10 @@ $menu = [
     ['dashboard',    'Dashboard',                '/admin/',                   'dashboard', null],
     ['projects',     'Project',                  '/admin/projects/',          'folder',    null],
     ['skills',       'Skill',                    '/admin/skills/',            'tools',     null],
-    ['experiences',  'Pengalaman & pendidikan',  null,                        'school',    'Tahap 4'],
-    ['achievements', 'Sertifikat & lomba',       null,                        'award',     'Tahap 4'],
+    ['experiences',  'Pengalaman & pendidikan',  '/admin/experiences/',       'school',    null],
+    ['achievements', 'Sertifikat & lomba',       '/admin/achievements/',      'award',     null],
     ['messages',     'Pesan',                    null,                        'inbox',     'Tahap 6'],
-    ['profile',      'Profil',                   null,                        'user',      'Tahap 4'],
+    ['profile',      'Profil',                   '/admin/profile.php',        'user',      null],
     ['password',     'Ganti password',           '/admin/password.php',       'key',       null],
 ];
 ?>

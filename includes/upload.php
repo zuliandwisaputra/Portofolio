@@ -219,3 +219,60 @@ function image_size(string $folder, ?string $file, bool $small = false): array
     $info = is_file($path) ? @getimagesize($path) : false;
     return $info ? [$info[0], $info[1]] : [0, 0];
 }
+
+/* ------------------------------------------------------------------
+ * PDF (CV): maksimal 5 MB, isi file harus benar-benar PDF
+ * ------------------------------------------------------------------ */
+
+const PDF_MAX_BYTES = 5 * 1024 * 1024;   // 5 MB
+
+function pdf_upload_error(array $file): ?string
+{
+    $name  = '"' . mb_strimwidth((string) ($file['name'] ?? 'file'), 0, 60, '…') . '"';
+    $error = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+
+    if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
+        return "File $name terlalu besar. Maksimal " . format_bytes(PDF_MAX_BYTES) . '.';
+    }
+    if ($error !== UPLOAD_ERR_OK || !is_uploaded_file((string) $file['tmp_name'])) {
+        return "File $name gagal diunggah. Coba pilih ulang.";
+    }
+    if ((int) $file['size'] > PDF_MAX_BYTES) {
+        return "File $name berukuran " . format_bytes((int) $file['size']) . '. Maksimal ' . format_bytes(PDF_MAX_BYTES) . '.';
+    }
+    $head = (string) file_get_contents((string) $file['tmp_name'], false, null, 0, 5);
+    $mime = class_exists('finfo') ? (new finfo(FILEINFO_MIME_TYPE))->file((string) $file['tmp_name']) : 'application/pdf';
+    if ($head !== '%PDF-' || $mime !== 'application/pdf') {
+        return "File $name bukan PDF. CV harus berformat PDF.";
+    }
+    return null;
+}
+
+/** Simpan PDF yang sudah lolos pdf_upload_error(). Mengembalikan nama file acak. */
+function save_pdf(array $file, string $folder): string
+{
+    $dir = ROOT_PATH . '/uploads/' . $folder;
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true) && !is_dir($dir)) {
+        throw new RuntimeException('Folder uploads/' . $folder . ' tidak bisa dibuat.');
+    }
+    if (!is_writable($dir)) {
+        throw new RuntimeException('Folder uploads/' . $folder . ' tidak bisa ditulis oleh server. Periksa izin folder.');
+    }
+    $name = bin2hex(random_bytes(16)) . '.pdf';
+    if (!move_uploaded_file((string) $file['tmp_name'], $dir . '/' . $name)) {
+        throw new RuntimeException('File PDF gagal disimpan.');
+    }
+    @chmod($dir . '/' . $name, 0644);
+    return $name;
+}
+
+/** Hapus satu file PDF dari server. */
+function delete_pdf(string $folder, ?string $file): void
+{
+    if (is_upload_name($file) && str_ends_with((string) $file, '.pdf')) {
+        $path = ROOT_PATH . '/uploads/' . $folder . '/' . $file;
+        if (is_file($path)) {
+            @unlink($path);
+        }
+    }
+}
